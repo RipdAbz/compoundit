@@ -86,48 +86,48 @@
     <script type="text/babel">
         // React application code goes here
         // Main App Component
-        const App = () => {
-          // State to manage the currently active page
-          const [currentPage, setCurrentPage] = React.useState('home');
+			const App = () => {
+			  // 🚨 Preserving currentPage even when state updates
+			  const defaultPage = window.sessionStorage.getItem("currentPage") || "home";
+			  const [currentPage, setCurrentPage] = React.useState(defaultPage);
 
-          // Utility function to render content based on currentPage
-          const renderPage = () => {
-            switch (currentPage) {
-              case 'home':
-                return <HomePage setCurrentPage={setCurrentPage} />;
-              case 'about':
-                return <AboutUsPage />;
-              case 'team':
-                return <OurTeamPage />;
-              case 'services':
-                return <OurServicesPage />;
-              case 'faqs':
-                return <FAQsPage />;
-              case 'contact':
-                return <ContactUsPage />;
-              default:
-                return <HomePage setCurrentPage={setCurrentPage} />;
-            }
-          };
+			  // Save to sessionStorage on change
+			  React.useEffect(() => {
+				sessionStorage.setItem("currentPage", currentPage);
+			  }, [currentPage]);
 
-          return (
-            // Main container with Inter font and background colour
-            <div className="font-inter antialiased bg-compoundit-gray text-compoundit-text min-h-screen flex flex-col">
-              {/* Navbar component */}
-              <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+			  // Utility function to render content based on currentPage
+			  const renderPage = () => {
+				switch (currentPage) {
+				  case 'home':
+					return <HomePage setCurrentPage={setCurrentPage} />;
+				  case 'about':
+					return <AboutUsPage />;
+				  case 'team':
+					return <OurTeamPage />;
+				  case 'services':
+					return <OurServicesPage />;
+				  case 'faqs':
+					return <FAQsPage />;
+				  case 'contact':
+					return <ContactUsPage />;
+				  default:
+					return <HomePage setCurrentPage={setCurrentPage} />;
+				}
+			  };
 
-              {/* Main content area */}
-              {/* MOBILE CHANGE: Adjusted padding for better spacing on mobile */}
-              <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                {renderPage()}
-              </main>
-
-              {/* Footer component */}
-              <Footer />
-            </div>
-          );
-        };
-
+			  return (
+				<div className="font-inter antialiased bg-compoundit-gray text-compoundit-text min-h-screen flex flex-col">
+				  <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+				  <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+					{renderPage()}
+				  </main>
+				  <Footer />
+				</div>
+			  );
+			};
+// 🔁 Keep this at the bottom
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
         // Navbar Component
         const Navbar = ({ setCurrentPage, currentPage }) => {
           const navItems = [
@@ -533,13 +533,6 @@
         const ContactUsPage = () => {
           // This state checks the URL for a 'submitted' query parameter to show the success message.
           const [isSubmitted, setIsSubmitted] = React.useState(false);
-
-          React.useEffect(() => {
-            const searchParams = new URLSearchParams(window.location.search);
-            if (searchParams.has('submitted')) {
-              setIsSubmitted(true);
-            }
-          }, []);
 
           return (
             <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
