@@ -45,7 +45,7 @@
             background-position: center;
             background-repeat: no-repeat;
             position: relative; /* Needed for overlay content */
-            height: 500px; /* Adjust height as needed */
+            height: 450px; /* Adjusted height for better mobile view */
             display: flex;
             align-items: center; /* Vertically centre content */
             justify-content: flex-start; /* Align content to the start (left) */
@@ -59,7 +59,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0) 100%);
             z-index: 1; /* Place overlay above background image */
         }
         .hero-content {
@@ -117,7 +117,8 @@
               <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
 
               {/* Main content area */}
-              <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+              {/* MOBILE CHANGE: Adjusted padding for better spacing on mobile */}
+              <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 {renderPage()}
               </main>
 
@@ -142,7 +143,7 @@
             <nav className="bg-white shadow-sm py-4 sticky top-0 z-50">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
                 {/* Logo */}
-                <div className="flex items-center mb-0">
+                <div className="flex items-center mb-4 sm:mb-0">
                     <img
                         src="CompoundItLogo.png"
                         alt="CompoundIT Logo"
@@ -154,7 +155,7 @@
                 </div>
 
                 {/* Navigation links */}
-                <div className="flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-2 text-sm md:text-base">
+                <div className="flex flex-wrap justify-center sm:justify-end gap-x-2 sm:gap-x-4 gap-y-2 text-sm md:text-base">
                   {navItems.map((item) => (
                     <button
                       key={item.page}
@@ -228,11 +229,12 @@
             ];
 
           return (
-            <div className="bg-white p-2 sm:p-8 rounded-xl shadow-lg mt-4">
+            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg">
               {/* Hero Section */}
-              <section className="hero-background rounded-xl shadow-md mb-12 overflow-hidden -mx-4 sm:-mx-8 lg:-mx-8 -mt-2 sm:-mt-8">
-                  <div className="hero-content p-8">
-                      <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 text-white">
+              <section className="hero-background rounded-xl shadow-md mb-12 overflow-hidden">
+                  <div className="hero-content p-6 md:p-8">
+                      {/* MOBILE CHANGE: Responsive font size */}
+                      <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4 text-white">
                           Medicine Made for You
                       </h1>
                       <p className="text-lg text-white max-w-xl mb-8">
@@ -247,13 +249,14 @@
               {/* Intro Section */}
               <section className="grid md:grid-cols-2 gap-8 items-center mb-12">
                   <div className="bg-compoundit-light-green p-6 rounded-lg shadow-md">
-                      <h2 className="text-3xl font-bold text-compoundit-text mb-4">What is Compounding?</h2>
+                      {/* MOBILE CHANGE: Responsive font size */}
+                      <h2 className="text-2xl md:text-3xl font-bold text-compoundit-text mb-4">What is Compounding?</h2>
                       <p className="text-compoundit-dark-gray leading-relaxed">
                           Compounding is the art and science of preparing customised medications for individual patients. It allows pharmacists to work with prescribers to create medications in specific dosages, forms (creams, liquids, capsules), or without certain allergens, that are not commercially available.
                       </p>
                   </div>
                   <div className="bg-compoundit-light-green p-6 rounded-lg shadow-md">
-                      <h2 className="text-3xl font-bold text-compoundit-text mb-4">Why Choose CompoundIT?</h2>
+                      <h2 className="text-2xl md:text-3xl font-bold text-compoundit-text mb-4">Why Choose CompoundIT?</h2>
                       <ul className="list-disc list-inside text-compoundit-dark-gray space-y-2">
                           <li>Tailored solutions for unique patient needs.</li>
                           <li>Expert pharmacists with specialised training.</li>
@@ -264,12 +267,13 @@
               </section>
 
               {/* Core Services Section */}
-              <section className="text-center bg-white p-8 rounded-xl shadow-lg mb-12">
-                  <h2 className="text-4xl font-bold text-compoundit-text mb-8">Our Core Services</h2>
+              <section className="text-center bg-white p-4 md:p-8 rounded-xl shadow-lg mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8">Our Core Services</h2>
                   <p className="text-lg text-compoundit-dark-gray max-w-3xl mx-auto mb-10">
                       We offer a comprehensive range of services designed to provide you with the best personalised pharmaceutical care.
                   </p>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                   {/* MOBILE CHANGE: Adjusted grid for mobile */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                       {services.map((service, index) => (
                           <div key={index} className="bg-compoundit-light-green p-6 rounded-lg shadow-md text-center flex flex-col items-center">
                               {service.icon}
@@ -284,8 +288,8 @@
               </section>
 
               {/* CTA Section */}
-              <section className="text-center bg-compoundit-light-green p-8 rounded-xl shadow-lg mb-12">
-                  <h2 className="text-4xl font-bold text-compoundit-text mb-6">Ready to Experience Personalised Care?</h2>
+              <section className="text-center bg-compoundit-light-green p-6 md:p-8 rounded-xl shadow-lg mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6">Ready to Experience Personalised Care?</h2>
                   <p className="text-lg text-compoundit-dark-gray max-w-4xl mx-auto mb-8">
                       Ordering your custom compounded medication is simple and convenient. Start your journey to better health today.
                   </p>
@@ -295,8 +299,8 @@
               </section>
 
               {/* Commitment Section */}
-              <section className="text-center bg-white p-8 rounded-xl shadow-lg">
-                  <h2 className="text-4xl font-bold text-compoundit-text mb-6">Our Commitment to Your Health</h2>
+              <section className="text-center bg-white p-4 md:p-8 rounded-xl shadow-lg">
+                  <h2 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6">Our Commitment to Your Health</h2>
                   <p className="text-lg text-compoundit-dark-gray max-w-4xl mx-auto">
                       We believe in a collaborative approach to healthcare, working closely with you and your doctor to achieve optimal health outcomes. Your well-being is our priority.
                   </p>
@@ -308,23 +312,23 @@
         // About Us Page
         const AboutUsPage = () => {
           return (
-            <div className="bg-white p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-4xl font-bold text-compoundit-text mb-6 text-center">About CompoundIT Pharmacy</h1>
+            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6 text-center">About CompoundIT Pharmacy</h1>
               <section className="mb-8">
-                <h2 className="text-3xl font-semibold text-compoundit-text mb-4">Our Mission</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Our Mission</h2>
                 <p className="text-compoundit-dark-gray leading-relaxed">
                   At CompoundIT, our mission is to provide personalised, high-quality pharmaceutical compounding services that meet the unique needs of each patient. We are committed to fostering health and wellness by collaborating with healthcare practitioners and empowering individuals through education and tailored medication solutions.
                 </p>
               </section>
               <section className="mb-8">
-                <h2 className="text-3xl font-semibold text-compoundit-text mb-4">Our History</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Our History</h2>
                 <p className="text-compoundit-dark-gray leading-relaxed">
                   Established in 2023, CompoundIT was founded on the principle that one-size-fits-all medication doesn't always work. We saw a growing need for customised pharmaceutical solutions and dedicated ourselves to mastering the art and science of compounding. From humble beginnings, we have grown into a trusted name in personalised healthcare, serving our community with integrity and innovation.
                 </p>
               </section>
               <section>
-                <h2 className="text-3xl font-semibold text-compoundit-text mb-4">Our Values</h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Our Values</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-compoundit-light-green p-5 rounded-lg shadow-md">
                     <h3 className="text-xl font-bold text-compoundit-text mb-2">Patient-Centric Care</h3>
                     <p className="text-compoundit-dark-gray">Your health and unique needs are at the core of everything we do.</p>
@@ -379,18 +383,19 @@
           ];
 
           return (
-            <div className="bg-white p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-4xl font-bold text-compoundit-text mb-8 text-center">Meet Our Expert Team</h1>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Meet Our Expert Team</h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {teamMembers.map((member, index) => (
                   <div key={index} className="bg-compoundit-light-green p-6 rounded-lg shadow-md text-center flex flex-col items-center">
+                    {/* MOBILE CHANGE: Responsive image size */}
                     <img
                       src={member.image}
                       alt={`Photo of ${member.name}`}
-                      className="w-32 h-32 rounded-full object-cover mb-4 ring-4 ring-compoundit-accent ring-opacity-50"
+                      className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mb-4 ring-4 ring-compoundit-accent ring-opacity-50"
                       onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x150/9CA3AF/FFFFFF?text=PIC'; }}
                     />
-                    <h2 className="text-2xl font-semibold text-compoundit-text mb-2">{member.name}</h2>
+                    <h2 className="text-xl sm:text-2xl font-semibold text-compoundit-text mb-2">{member.name}</h2>
                     <p className="text-compoundit-accent font-medium mb-3">{member.title}</p>
                     <p className="text-compoundit-dark-gray leading-relaxed text-sm">{member.bio}</p>
                   </div>
@@ -414,26 +419,27 @@
           ];
 
           return (
-            <div className="bg-white p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-4xl font-bold text-compoundit-text mb-8 text-center">Our Services & Medicines</h1>
+            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Our Services & Medicines</h1>
               <section className="mb-10 text-center">
-                <h2 className="text-3xl font-semibold text-compoundit-text mb-4">Crafting Medications Just for You</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Crafting Medications Just for You</h2>
                 <p className="text-compoundit-dark-gray leading-relaxed max-w-3xl mx-auto">
                   At CompoundIT, we understand that standard medications don't always fit everyone. Our compounded medicines are custom-prepared to meet your precise health requirements, offering solutions when commercial products fall short.
                 </p>
               </section>
 
-                <section className="bg-compoundit-light-green p-8 rounded-xl shadow-lg text-center mb-10">
-                <h2 className="text-3xl font-bold text-compoundit-text mb-4">Our Areas of Compounding</h2>
+                <section className="bg-compoundit-light-green p-4 md:p-8 rounded-xl shadow-lg text-center mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold text-compoundit-text mb-4">Our Areas of Compounding</h2>
                 <p className="text-lg text-compoundit-dark-gray max-w-3xl mx-auto mb-8">
                   We compound medications across a wide range of specialities. Here are some of the common areas we work with:
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                   {compoundingAreas.map((area, index) => (
                     <div key={index} className="group relative rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
-                      <img src={area.image} alt={area.name} className="w-full h-48 object-cover"/>
+                      {/* MOBILE CHANGE: Responsive image height */}
+                      <img src={area.image} alt={area.name} className="w-full h-32 sm:h-48 object-cover"/>
                       <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                        <h4 className="text-white text-lg font-bold text-center p-2">{area.name}</h4>
+                        <h4 className="text-white text-md sm:text-lg font-bold text-center p-2">{area.name}</h4>
                       </div>
                     </div>
                   ))}
@@ -442,7 +448,7 @@
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                  <h3 className="text-2xl font-bold text-compoundit-text mb-3">Customisation Options</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-compoundit-text mb-3">Customisation Options</h3>
                   <div className="space-y-4 text-compoundit-dark-gray">
                       <p><strong className="block text-compoundit-text">Dosage Strengths</strong>Exact strengths not commercially available.</p>
                       <p><strong className="block text-compoundit-text">Unique Dosage Forms</strong>Creams, gels, suppositories, oral liquids, or lozenges.</p>
@@ -452,7 +458,7 @@
                   </div>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                  <h3 className="text-2xl font-bold text-compoundit-text mb-3">Benefits of Compounded Medicine</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-compoundit-text mb-3">Benefits of Compounded Medicine</h3>
                   <div className="space-y-4 text-compoundit-dark-gray">
                       <p><strong className="block text-compoundit-text">Personalised Treatment</strong>Tailored specifically to your body's needs.</p>
                       <p><strong className="block text-compoundit-text">Address Sensitivities</strong>Avoid ingredients you are allergic or sensitive to.</p>
@@ -501,20 +507,20 @@
           const [openIndex, setOpenIndex] = React.useState(null);
 
           return (
-            <div className="bg-white p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-4xl font-bold text-compoundit-text mb-8 text-center">Frequently Asked Questions</h1>
+            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Frequently Asked Questions</h1>
               <div className="space-y-4">
                 {faqs.map((faq, index) => (
                   <div key={index} className="border border-compoundit-light-green rounded-lg overflow-hidden">
                     <button
-                      className="w-full text-left p-5 bg-compoundit-light-green hover:bg-white flex justify-between items-center transition-colors"
+                      className="w-full text-left p-4 md:p-5 bg-compoundit-light-green hover:bg-white flex justify-between items-center transition-colors"
                       onClick={() => setOpenIndex(openIndex === index ? null : index)}
                     >
-                      <span className="text-xl font-semibold text-compoundit-text">{faq.question}</span>
+                      <span className="text-lg md:text-xl font-semibold text-compoundit-text">{faq.question}</span>
                       <svg className={`w-6 h-6 transform transition-transform ${openIndex === index ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
                     {openIndex === index && (
-                      <div className="p-5 bg-white text-compoundit-dark-gray leading-relaxed">{faq.answer}</div>
+                      <div className="p-4 md:p-5 bg-white text-compoundit-dark-gray leading-relaxed">{faq.answer}</div>
                     )}
                   </div>
                 ))}
@@ -536,8 +542,8 @@
           }, []);
 
           return (
-            <div className="bg-white p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-4xl font-bold text-compoundit-text mb-8 text-center">Get in Touch</h1>
+            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Get in Touch</h1>
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="bg-compoundit-light-green p-6 rounded-lg shadow-md">
                   <h2 className="text-2xl font-semibold text-compoundit-text mb-4">Our Details</h2>
@@ -561,13 +567,14 @@
                 <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                   <h2 className="text-2xl font-semibold text-compoundit-text mb-4">Send Us an Enquiry</h2>
                   {isSubmitted ? (
-                      <div className="text-center p-10 flex flex-col items-center justify-center h-full">
-                          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                              <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <div className="text-center p-6 md:p-10 flex flex-col items-center justify-center h-full">
+                          {/* MOBILE CHANGE: Responsive icon size */}
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center">
+                              <svg className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                               </svg>
                           </div>
-                          <h3 className="text-2xl font-bold text-compoundit-text mt-4">Thank you!</h3>
+                          <h3 className="text-xl sm:text-2xl font-bold text-compoundit-text mt-4">Thank you!</h3>
                           <p className="text-compoundit-dark-gray">Your message has been sent successfully. We will get back to you shortly.</p>
                       </div>
                   ) : (
@@ -589,7 +596,7 @@
                         <textarea id="message" name="message" rows="4" required className="w-full p-2 rounded-md border border-gray-300 focus:ring-compoundit-accent focus:border-compoundit-accent"></textarea>
                       </div>
                       {/* This hidden input tells FormSubmit where to redirect to after a successful submission */}
-                      <input type="hidden" name="_next" value={window.location.href + '?submitted=true'} />
+                      <input type="hidden" name="_next" value={window.location.href.split('?')[0] + '?submitted=true'} />
                       <input type="hidden" name="_captcha" value="false" />
                       <input type="hidden" name="_subject" value="New Enquiry from CompoundIT Website!" />
                       <button type="submit" className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md shadow-lg hover:bg-opacity-90 transition-colors">
