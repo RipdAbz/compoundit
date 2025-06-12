@@ -525,50 +525,15 @@
 
         // Contact Us Page
         const ContactUsPage = () => {
-          const [status, setStatus] = React.useState({
-            submitted: false,
-            submitting: false,
-            info: { error: false, msg: null }
-          });
+          // This state checks the URL for a 'submitted' query parameter to show the success message.
+          const [isSubmitted, setIsSubmitted] = React.useState(false);
 
-          const handleServerResponse = (ok, msg) => {
-            if (ok) {
-              setStatus({
-                submitted: true,
-                submitting: false,
-                info: { error: false, msg: msg }
-              });
-            } else {
-              setStatus(prevStatus => ({ ...prevStatus, info: { error: true, msg: msg } }));
+          React.useEffect(() => {
+            const searchParams = new URLSearchParams(window.location.search);
+            if (searchParams.has('submitted')) {
+              setIsSubmitted(true);
             }
-          };
-          
-          const handleSubmit = e => {
-            e.preventDefault();
-            setStatus(prevStatus => ({ ...prevStatus, submitting: true }));
-            const form = e.target;
-            const data = new FormData(form);
-            fetch(form.action, {
-              method: 'POST',
-              body: data,
-              headers: {
-                'Accept': 'application/json'
-              }
-            }).then(response => {
-              if (response.ok) {
-                return response.json();
-              }
-              throw new Error('Network response was not ok.');
-            }).then(() => {
-              handleServerResponse(true, "Thank you! Your message has been sent.");
-              form.reset();
-            }).catch(error => {
-              handleServerResponse(false, "Sorry, there was an error submitting your form. Please try again later.");
-              console.error(error);
-            }).finally(() => {
-              setStatus(prevStatus => ({ ...prevStatus, submitting: false }));
-            });
-          };
+          }, []);
 
           return (
             <div className="bg-white p-8 rounded-xl shadow-lg mt-4">
@@ -595,7 +560,7 @@
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                   <h2 className="text-2xl font-semibold text-compoundit-text mb-4">Send Us an Enquiry</h2>
-                  {status.submitted ? (
+                  {isSubmitted ? (
                       <div className="text-center p-10 flex flex-col items-center justify-center h-full">
                           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                               <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -607,7 +572,6 @@
                       </div>
                   ) : (
                     <form 
-                      onSubmit={handleSubmit}
                       action="https://formsubmit.co/shop.compounding@gmail.com" 
                       method="POST" 
                       className="space-y-4"
@@ -624,14 +588,13 @@
                         <label htmlFor="message" className="block text-sm font-medium mb-1 text-compoundit-text">Your Message</label>
                         <textarea id="message" name="message" rows="4" required className="w-full p-2 rounded-md border border-gray-300 focus:ring-compoundit-accent focus:border-compoundit-accent"></textarea>
                       </div>
+                      {/* This hidden input tells FormSubmit where to redirect to after a successful submission */}
+                      <input type="hidden" name="_next" value={window.location.href + '?submitted=true'} />
                       <input type="hidden" name="_captcha" value="false" />
                       <input type="hidden" name="_subject" value="New Enquiry from CompoundIT Website!" />
-                      <button type="submit" className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md shadow-lg hover:bg-opacity-90 transition-colors disabled:opacity-50" disabled={status.submitting}>
-                        {status.submitting ? 'Sending...' : 'Send Message'}
+                      <button type="submit" className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md shadow-lg hover:bg-opacity-90 transition-colors">
+                        Send Message
                       </button>
-                       {status.info.error && (
-                          <p className="text-red-500 text-sm text-center">{status.info.msg}</p>
-                       )}
                     </form>
                   )}
                 </div>
