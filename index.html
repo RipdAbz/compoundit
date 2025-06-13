@@ -140,40 +140,45 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
           ];
 
           return (
-            <nav className="bg-white shadow-sm py-2 z-50 sticky top-0">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
-                {/* Logo */}
-					<div className="flex items-center mb-4 sm:mb-0">
-					  <img
-						src="CompoundItLogo.png"
-						alt="CompoundIT Logo"
-						className="object-contain"
-						style={{ height: '100px', width: 'auto', cursor: 'pointer' }}
-						onClick={() => setCurrentPage('home')}
-						onError={(e) => {
-						  e.target.onerror = null;
-						  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT';
-						}}
-					  />
-					</div>
-                {/* Navigation links */}
-                <div className="flex flex-nowrap overflow-x-auto scroll-smooth scrollbar-none justify-center sm:justify-end gap-x-2 sm:gap-x-4 text-sm md:text-base">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.page}
-                      onClick={() => setCurrentPage(item.page)}
-                      className={`px-3 py-2 rounded-lg transition-colors duration-200
-                        ${currentPage === item.page
-                          ? 'bg-compoundit-accent text-white shadow-md'
-                          : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
-                        }`}
-                    >
-                      {item.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </nav>
+			<nav className="bg-white shadow-sm py-2 z-50 sticky top-0">
+			  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
+					
+				{/* Logo */}
+				<div className="flex items-center mb-0 sm:mb-0 space-x-2">
+				  <img
+					src="CompoundItLogo.png"
+					alt="CompoundIT Logo"
+					className="h-6 w-auto sm:h-8 object-contain"
+					style={{ cursor: 'pointer' }}
+					onClick={() => setCurrentPage('home')}
+					onError={(e) => {
+					  e.target.onerror = null;
+					  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT';
+					}}
+				  />
+				  <span className="text-xl sm:text-2xl font-bold text-compoundit-text">
+					Compound<span className="text-compoundit-accent">It</span>
+				  </span>
+				</div>
+
+				{/* Navigation links */}
+				<div className="flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-2 text-sm md:text-base">
+				  {navItems.map((item) => (
+					<button
+					  key={item.page}
+					  onClick={() => setCurrentPage(item.page)}
+					  className={`px-3 py-1 rounded-lg transition-colors duration-200
+						${currentPage === item.page
+						  ? 'bg-compoundit-accent text-white shadow-md'
+						  : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
+						}`}
+					>
+					  {item.name}
+					</button>
+				  ))}
+				</div>
+			  </div>
+			</nav>
           );
         };
 
@@ -244,8 +249,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
           return (
             <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg">
               {/* Hero Section */}
-              <section className="hero-background -mt-8 rounded-xl shadow-md mb-12 overflow-hidden h-[350px] sm:h-[475px] md:h-[550px]">
-                  <div className="hero-content p-4 sm:p-6 md:p-8 max-w-xl w-full break-words">
+              <section className="hero-background -mt-8 rounded-xl shadow-md mb-6 sm:mb-10 md:mb-12 overflow-hidden h-[350px] sm:h-[475px] md:h-[550px]">
+                  <div className="hero-content px-4 py-2 sm:p-6 md:p-8 max-w-xl w-full break-words">
                       {/* MOBILE CHANGE: Responsive font size */}
                       <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-white break-words">
                           Medicine Made for You
