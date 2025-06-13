@@ -143,17 +143,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
             <nav className="bg-white shadow-sm py-2 z-50 sticky top-0">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
                 {/* Logo */}
-                <div className="flex items-center mb-4 sm:mb-0">
-                    <img
-                        src="CompoundItLogo.png"
-                        alt="CompoundIT Logo"
-                        className="h-30 sm:h-32 w-auto object-contain"
-                        onClick={() => setCurrentPage('home')}
-                        style={{ cursor: 'pointer' }}
-                        onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT'; }}
-                    />
-                </div>
-
+					<div className="flex items-center mb-4 sm:mb-0">
+					  <img
+						src="CompoundItLogo.png"
+						alt="CompoundIT Logo"
+						className="object-contain"
+						style={{ height: '60px', width: 'auto', cursor: 'pointer' }}
+						onClick={() => setCurrentPage('home')}
+						onError={(e) => {
+						  e.target.onerror = null;
+						  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT';
+						}}
+					  />
+					</div>
                 {/* Navigation links */}
                 <div className="flex flex-nowrap overflow-x-auto scroll-smooth scrollbar-none justify-center sm:justify-end gap-x-2 sm:gap-x-4 text-sm md:text-base">
                   {navItems.map((item) => (
