@@ -1,687 +1,501 @@
 <!DOCTYPE html>
 <html lang="en-AU">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CompoundIT Compounding Pharmacy</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font (Google Fonts) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        /* Custom Tailwind Configuration for the specific colours */
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CompoundIT Compounding Pharmacy</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    :root {
+      --colour-compoundit-light-green: #E8F8F5;
+      --colour-compoundit-accent: #86D9C5;
+      --colour-compoundit-gray: #FFFFFF;
+      --colour-compoundit-dark-gray: #6B7280;
+      --colour-compoundit-text: #374151;
+      --colour-black-icon: #000000;
+    }
+    .bg-compoundit-light-green { background-color: var(--colour-compoundit-light-green); }
+    .bg-compoundit-accent { background-color: var(--colour-compoundit-accent); }
+    .bg-compoundit-gray { background-color: var(--colour-compoundit-gray); }
+    .text-compoundit-dark-gray { color: var(--colour-compoundit-dark-gray); }
+    .text-compoundit-text { color: var(--colour-compoundit-text); }
+    .text-compoundit-accent { color: var(--colour-compoundit-accent); }
+    .text-black-icon { color: var(--colour-black-icon); }
+    .border-compoundit-light-green { border-color: var(--colour-compoundit-light-green); }
+    .hover\:bg-compoundit-light-green:hover { background-color: var(--colour-compoundit-light-green); }
 
-        :root {
-            /* Simplified palette: Green and White only for a clean medical feel */
-            --colour-compoundit-light-green: #E8F8F5;  /* Very light mint green */
-            --colour-compoundit-accent: #86D9C5;      /* Primary green accent (slightly desaturated teal) */
-            --colour-compoundit-gray: #FFFFFF;        /* Overall background, pure white */
-            --colour-compoundit-dark-gray: #6B7280;   /* Secondary text */
-            --colour-compoundit-text: #374151;        /* Primary text */
-            --colour-black-icon: #000000;              /* Black for icons */
-        }
-
-        /* Define custom classes for the new palette */
-        .bg-compoundit-light-green { background-color: var(--colour-compoundit-light-green); }
-        .bg-compoundit-accent { background-color: var(--colour-compoundit-accent); }
-        .bg-compoundit-gray { background-color: var(--colour-compoundit-gray); }
-        .text-compoundit-dark-gray { color: var(--colour-compoundit-dark-gray); }
-        .text-compoundit-text { color: var(--colour-compoundit-text); }
-        .text-compoundit-accent { color: var(--colour-compoundit-accent); }
-        .text-black-icon { color: var(--colour-black-icon); }
-        .border-compoundit-light-green { border-color: var(--colour-compoundit-light-green); }
-
-        /* Hover states for navigation - adjusted to new palette */
-        .hover\:bg-compoundit-light-green:hover { background-color: var(--colour-compoundit-light-green); }
-
-        /* Custom style for the hero section background image */
-        .hero-background {
-            /* This now points to your local image file. */
-            background-image: url('Welcome.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative; /* Needed for overlay content */
-            /*height: 450px; */ /* Adjusted height for better mobile view */
-            display: flex;
-            align-items: center; /* Vertically centre content */
-            justify-content: flex-start; /* Align content to the start (left) */
-            padding-left: 5%; /* Padding from the left */
-        }
-        /* Optional: Add an overlay to make text more readable on the image */
-        .hero-background::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0) 100%);
-            z-index: 1; /* Place overlay above background image */
-        }
-        .hero-content {
-            position: relative; /* Ensure content is above the overlay */
-            z-index: 2;
-            color: white; /* Ensure text is visible on dark overlay */
-            text-align: left;
-            max-width: 600px; /* Limit width of text for readability */
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    .hero-background {
+      background-image: url('Welcome.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 5%;
+    }
+    .hero-background::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0) 100%);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: white;
+      text-align: left;
+      max-width: 600px;
+    }
+    body { font-family: 'Inter', sans-serif; }
+  </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="scroll-smooth">
+  <div id="root"></div>
 
-    <!-- React CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel CDN - for JSX transformation in the browser -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- React & Babel -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <script type="text/babel">
-        // React application code goes here
-        // Main App Component
-			const App = () => {
-			  // 🚨 Preserving currentPage even when state updates
-			  const defaultPage = window.sessionStorage.getItem("currentPage") || "home";
-			  const [currentPage, setCurrentPage] = React.useState(defaultPage);
+  <script type="text/babel">
+    const App = () => {
+      const defaultPage = sessionStorage.getItem("currentPage") || "home";
+      const [currentPage, setCurrentPage] = React.useState(defaultPage);
+      React.useEffect(() => {
+        sessionStorage.setItem("currentPage", currentPage);
+      }, [currentPage]);
 
-			  // Save to sessionStorage on change
-			  React.useEffect(() => {
-				sessionStorage.setItem("currentPage", currentPage);
-			  }, [currentPage]);
+      const renderPage = () => {
+        switch (currentPage) {
+          case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
+          case 'about': return <AboutUsPage />;
+          case 'team': return <OurTeamPage />;
+          case 'services': return <OurServicesPage />;
+          case 'faqs': return <FAQsPage />;
+          case 'contact': return <ContactUsPage />;
+          default: return <HomePage setCurrentPage={setCurrentPage} />;
+        }
+      };
 
-			  // Utility function to render content based on currentPage
-			  const renderPage = () => {
-				switch (currentPage) {
-				  case 'home':
-					return <HomePage setCurrentPage={setCurrentPage} />;
-				  case 'about':
-					return <AboutUsPage />;
-				  case 'team':
-					return <OurTeamPage />;
-				  case 'services':
-					return <OurServicesPage />;
-				  case 'faqs':
-					return <FAQsPage />;
-				  case 'contact':
-					return <ContactUsPage />;
-				  default:
-					return <HomePage setCurrentPage={setCurrentPage} />;
-				}
-			  };
+      return (
+        <div className="font-inter antialiased bg-compoundit-gray text-compoundit-text min-h-screen flex flex-col">
+          <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+          <main className="flex-grow w-full max-w-7xl mx-auto px-0 pt-0 pb-0">
+            {renderPage()}
+          </main>
+          <Footer />
+        </div>
+      );
+    };
 
-			  return (
-				<div className="font-inter antialiased bg-compoundit-gray text-compoundit-text min-h-screen flex flex-col">
-				  <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
-				  <main className="flex-grow w-full max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 pt-0 pb-0">
-					{renderPage()}
-				  </main>
-				  <Footer />
-				</div>
-			  );
-			};
-// 🔁 Keep this at the bottom
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-        // Navbar Component
-        const Navbar = ({ setCurrentPage, currentPage }) => {
-          const navItems = [
-            { name: 'Home', page: 'home' },
-            { name: 'Our Services', page: 'services' },
-            { name: 'About Us', page: 'about' },
-            { name: 'Our Team', page: 'team' },
-            { name: 'FAQs', page: 'faqs' },
-            { name: 'Contact Us', page: 'contact' },
-          ];
+    const Navbar = ({ setCurrentPage, currentPage }) => {
+      const navItems = [
+        { name: 'Home', page: 'home' },
+        { name: 'Our Services', page: 'services' },
+        { name: 'About Us', page: 'about' },
+        { name: 'Our Team', page: 'team' },
+        { name: 'FAQs', page: 'faqs' },
+        { name: 'Contact Us', page: 'contact' },
+      ];
+      return (
+        <nav className="bg-white shadow-sm py-2 z-50 sticky top-0">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
+            <div className="flex items-center mb-0 sm:mb-0 space-x-2">
+				<img
+				  src="./CompoundItLogo.png"
+				  alt="CompoundIT Logo"
+				  className="h-[36px] w-auto object-contain"
+				  style={{ maxHeight: '40px' }}
+				  onClick={() => setCurrentPage('home')}
+                onError={e=>{e.target.onerror=null;e.target.src='https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT'}}
+              />
+              <span className="text-xl sm:text-2xl font-bold text-compoundit-text">
+                Compound<span className="text-compoundit-accent">It</span>
+              </span>
+            </div>
+            <div className="flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-2 text-sm md:text-base">
+              {navItems.map(item => (
+                <button
+                  key={item.page}
+                  onClick={()=>setCurrentPage(item.page)}
+                  className={`px-3 py-1 rounded-lg transition-colors duration-200 ${
+                    currentPage===item.page
+                      ? 'bg-compoundit-accent text-white shadow-md'
+                      : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </nav>
+      );
+    };
 
-          return (
-			<nav className="bg-white shadow-sm py-2 z-50 sticky top-0">
-			  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
-					
-				{/* Logo */}
-				<div className="flex items-center mb-0 sm:mb-0 space-x-2">
-				  <img
-					src="CompoundItLogo.png"
-					alt="CompoundIT Logo"
-					className="h-6 w-auto sm:h-8 object-contain"
-					style={{ cursor: 'pointer' }}
-					onClick={() => setCurrentPage('home')}
-					onError={(e) => {
-					  e.target.onerror = null;
-					  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT';
-					}}
-				  />
-				  <span className="text-xl sm:text-2xl font-bold text-compoundit-text">
-					Compound<span className="text-compoundit-accent">It</span>
-				  </span>
-				</div>
+    const Footer = () => (
+      <footer className="bg-white py-6 mt-8 shadow-inner">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-compoundit-dark-gray text-sm">
+          <p>&copy; {new Date().getFullYear()} CompoundIT Compounding Pharmacy. All rights reserved.</p>
+          <p className="mt-2">Dedicated to personalised healthcare and wellness.</p>
+        </div>
+      </footer>
+    );
 
-				{/* Navigation links */}
-				<div className="flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-2 text-sm md:text-base">
-				  {navItems.map((item) => (
-					<button
-					  key={item.page}
-					  onClick={() => setCurrentPage(item.page)}
-					  className={`px-3 py-1 rounded-lg transition-colors duration-200
-						${currentPage === item.page
-						  ? 'bg-compoundit-accent text-white shadow-md'
-						  : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
-						}`}
-					>
-					  {item.name}
-					</button>
-				  ))}
-				</div>
-			  </div>
-			</nav>
-          );
-        };
+    const HomePage = ({ setCurrentPage }) => {
+      const services = [
+        {
+          title: 'Personalised Compounding',
+          description: 'Custom formulation of medications to meet individual patient needs, including unique dosages, forms, and allergen-free options.',
+          icon: (
+            <svg className="h-10 w-10 text-black-icon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <g transform="rotate(45 12 12)">
+                <rect x="3" y="12" width="18" height="8" rx="3" strokeWidth="2.5"/>
+                <line x1="12" y1="12" x2="12" y2="20" strokeWidth="2.5"/>
+              </g>
+            </svg>
+          ),
+        },
+        {
+          title: 'Consultation Services',
+          description: 'In-depth consultations with our expert pharmacists to discuss your health needs and treatment plans.',
+          icon: (
+            <svg className="h-10 w-10 text-black-icon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.924 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          ),
+        },
+        {
+          title: 'Prescription Management',
+          description: 'Streamlined process for managing and refilling your prescriptions, ensuring convenient access.',
+          icon: (
+            <svg className="h-10 w-10 text-black-icon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5a2 2 0 010 4.05M12 9.05a2 2 0 010-4.05"/>
+            </svg>
+          ),
+        },
+        {
+          title: 'Delivery Services',
+          description: 'Convenient delivery options for your compounded medications to your home or office.',
+          icon: (
+            <svg className="h-10 w-10 text-black-icon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+          ),
+        },
+      ];
 
-        // Footer Component
-        const Footer = () => {
-          return (
-            <footer className="bg-white py-6 mt-8 shadow-inner">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-compoundit-dark-gray text-sm">
-                <p>&copy; {new Date().getFullYear()} CompoundIT Compounding Pharmacy. All rights reserved.</p>
-                <p className="mt-2">Dedicated to personalised healthcare and wellness.</p>
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg">
+          {/* Hero */}
+          <section className="hero-background -mt-4 rounded-xl shadow-md mb-6 sm:mb-10 md:mb-12 overflow-hidden h-[350px] sm:h-[475px] md:h-[550px]">
+            <div className="hero-content px-4 py-2 sm:p-6 md:p-8 max-w-xl w-full">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white">
+                Medicine Made for You
+              </h1>
+              <p className="text-base sm:text-lg text-white mb-6">
+                Empowering Your Health Through Precision
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button onClick={()=>setCurrentPage('faqs')} className="px-8 py-3 bg-compoundit-accent text-white text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                  Explore FAQs
+                </button>
+                <button onClick={()=>setCurrentPage('services')} className="px-8 py-3 bg-white text-compoundit-accent border-2 border-compoundit-accent text-lg font-semibold rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300">
+                  Our Services
+                </button>
               </div>
-            </footer>
-          );
-        };
+            </div>
+          </section>
 
-        // --- Page Components ---
+          {/* What is Compounding? */}
+          <section className="grid md:grid-cols-2 gap-8 items-center mb-12">
+            <div className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">What is Compounding?</h2>
+              <p className="text-sm sm:text-base text-compoundit-dark-gray">
+                Compounding is the art and science of preparing customised medications for individual patients. It allows pharmacists to work with prescribers to create medications in specific dosages, forms (creams, liquids, capsules), or without certain allergens, that are not commercially available.
+              </p>
+            </div>
+            <div className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Why Choose CompoundIT?</h2>
+              <ul className="list-disc list-inside text-sm sm:text-base text-compoundit-dark-gray space-y-2">
+                <li>Tailored solutions for unique patient needs.</li>
+                <li>Expert pharmacists with specialised training.</li>
+                <li>High-quality ingredients and strict safety standards.</li>
+                <li>Comprehensive consultations and ongoing support.</li>
+              </ul>
+            </div>
+          </section>
 
-        // Home Page
-        const HomePage = ({ setCurrentPage }) => {
-            const services = [
-                {
-                    title: 'Personalised Compounding',
-                    description: 'Custom formulation of medications to meet individual patient needs.',
-                    icon: (
-						<div className="overflow-visible">
-							<svg
-							  className="h-10 w-10 text-black-icon mb-4"
-							  fill="none"
-							  stroke="currentColor"
-							  viewBox="0 0 24 24"
-							  xmlns="http://www.w3.org/2000/svg"
-							>
-							  <g transform="rotate(45 12 12)">
-								<rect x="3" y="12" width="18" height="8" rx="3" strokeWidth="2.5" />
-								<line x1="12" y1="12" x2="12" y2="20" strokeWidth="2.5" />
-							  </g>
-							</svg>
-						</div>
-                    ),
-                },
-                {
-                    title: 'Consultation Services',
-                    description: 'In-depth consultations with our expert pharmacists.',
-                    icon: (
-                        <svg className="h-10 w-10 text-black-icon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.924 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                    ),
-                },
-                {
-                    title: 'Prescription Management',
-                    description: 'Streamlined process for managing and refilling your prescriptions.',
-                    icon: (
-                        <svg className="h-10 w-10 text-black-icon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                        </svg>
-                    ),
-                },
-                {
-                    title: 'Delivery Services',
-                    description: 'Convenient and secure delivery options for your medications.',
-                    icon: (
-                       <svg className="h-10 w-10 text-black-icon mb-4" stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    ),
-                },
-            ];
+          {/* Core Services */}
+          <section className="text-center bg-white p-4 sm:p-6 rounded-xl shadow-lg mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8">Our Core Services</h2>
+            <p className="text-base sm:text-lg text-compoundit-dark-gray max-w-3xl mx-auto mb-10">
+              We offer a comprehensive range of services designed to provide you with the best personalised pharmaceutical care.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              {services.map((s,i) => (
+                <div key={i} className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md text-center flex flex-col items-center">
+                  {s.icon}
+                  <h3 className="text-base sm:text-lg font-semibold mb-1">{s.title}</h3>
+                  <p className="text-sm sm:text-base leading-relaxed">{s.description}</p>
+                </div>
+              ))}
+            </div>
+            <button onClick={()=>setCurrentPage('services')} className="mt-10 px-8 py-3 bg-compoundit-accent text-white text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+              View All Services
+            </button>
+          </section>
 
-          return (
-            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg">
-              {/* Hero Section */}
-              <section className="hero-background -mt-4 rounded-xl shadow-md mb-6 sm:mb-10 md:mb-12 overflow-hidden h-[350px] sm:h-[475px] md:h-[550px]">
-                  <div className="hero-content px-4 py-2 sm:p-6 md:p-8 max-w-xl w-full break-words">
-                      {/* MOBILE CHANGE: Responsive font size */}
-                      <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-white break-words">
-                          Medicine Made for You
-                      </h1>
-                      <p className="text-lg text-white max-w-xl mb-8">
-                          Empowering Your Health Through Precision
-                      </p>
-						<div className="flex flex-wrap gap-4">
-						  <button
-							onClick={() => setCurrentPage('faqs')}
-							className="px-8 py-3 bg-compoundit-accent text-white text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
-						  >
-							Explore FAQs
-						  </button>
-						  <button
-							onClick={() => setCurrentPage('services')}
-							className="px-8 py-3 bg-white text-compoundit-accent border-2 border-compoundit-accent text-lg font-semibold rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300"
-						  >
-							Our Services
-						  </button>
-						</div>
+          {/* Ready to Order */}
+          <section className="text-center bg-compoundit-light-green p-4 sm:p-6 rounded-xl shadow-lg mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Experience Personalised Care?</h2>
+            <p className="text-base sm:text-lg text-compoundit-dark-gray max-w-4xl mx-auto mb-8">
+              Ordering your custom compounded medication is simple and convenient. Start your journey to better health today.
+            </p>
+            <button onClick={()=>setCurrentPage('contact')} className="px-10 py-4 bg-compoundit-accent text-white text-xl font-bold rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition duration-300">
+              Order Your Medication Now
+            </button>
+          </section>
+
+          {/* Commitment */}
+          <section className="text-center bg-white p-4 sm:p-6 rounded-xl shadow-lg">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Commitment to Your Health</h2>
+            <p className="text-base sm:text-lg text-compoundit-dark-gray max-w-4xl mx-auto">
+              We believe in a collaborative approach to healthcare, working closely with you and your doctor to achieve optimal health outcomes. Your well-being is our priority.
+            </p>
+          </section>
+        </div>
+      );
+    };
+
+    const AboutUsPage = () => (
+      <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">About CompoundIT Pharmacy</h1>
+        <section className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Mission</h2>
+          <p className="text-sm sm:text-base text-compoundit-dark-gray leading-relaxed">
+            At CompoundIT, our mission is to provide personalised, high-quality pharmaceutical compounding services that meet the unique needs of each patient. We collaborate with healthcare practitioners and empower individuals through tailored medication solutions.
+          </p>
+        </section>
+        <section className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our History</h2>
+          <p className="text-sm sm:text-base text-compoundit-dark-gray leading-relaxed">
+            Established in 2023, CompoundIT was founded on the principle that one-size-fits-all medication doesn't always work. From humble beginnings, we have grown into a trusted name in personalised healthcare.
+          </p>
+        </section>
+        <section>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Our Values</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-compoundit-light-green p-4 sm:p-5 rounded-lg shadow-md">
+              <h3 className="text-lg sm:text-xl font-bold mb-2">Patient-Centric Care</h3>
+              <p className="text-sm sm:text-base text-compoundit-dark-gray">Your health and unique needs are at the core of everything we do.</p>
+            </div>
+            <div className="bg-compoundit-light-green p-4 sm:p-5 rounded-lg shadow-md">
+              <h3 className="text-lg sm:text-xl font-bold mb-2">Quality & Safety</h3>
+              <p className="text-sm sm:text-base text-compoundit-dark-gray">We adhere to the highest standards of quality and safety.</p>
+            </div>
+            <div className="bg-compoundit-light-green p-4 sm:p-5 rounded-lg shadow-md">
+              <h3 className="text-lg sm:text-xl font-bold mb-2">Expertise & Innovation</h3>
+              <p className="text-sm sm:text-base text-compoundit-dark-gray">Our pharmacists continuously advance their knowledge in compounding.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+
+    const OurTeamPage = () => {
+      const team = [
+        { name:'Dr. Emily Chen, Pharm.D.', title:'Lead Compounding Pharmacist', bio:'Dr. Chen brings over 15 years of experience...', image:'https://placehold.co/150x150/E8F8F5/374151?text=EC' },
+        { name:'Mr. David Lee, B.Pharm', title:'Clinical Compounding Specialist', bio:'David is an expert in pain management...', image:'https://placehold.co/150x150/FFFFFF/374151?text=DL' },
+        { name:'Ms. Sarah Green, M.Pharm', title:'Patient Care Pharmacist', bio:'Sarah excels in patient support...', image:'https://placehold.co/150x150/E8F8F5/374151?text=SG' },
+      ];
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Meet Our Expert Practitioners</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {team.map((m,i)=>(<div key={i} className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md text-center flex flex-col items-center">
+              <img src={m.image} alt={m.name} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full mb-4 ring-4 ring-compoundit-accent ring-opacity-50"/>
+              <h2 className="text-xl sm:text-2xl font-semibold mb-2">{m.name}</h2>
+              <p className="text-compoundit-accent font-medium mb-3">{m.title}</p>
+              <p className="text-sm sm:text-base text-compoundit-dark-gray leading-relaxed">{m.bio}</p>
+            </div>))}
+          </div>
+        </div>
+      );
+    };
+
+    const OurServicesPage = () => {
+      const areas = [
+        { name:'Hormone Replacement Therapy (HRT)', image:'https://images.pexels.com/photos/7615463/pexels-photo-7615463.jpeg' },
+        { name:'Pain Management', image:'https://images.unsplash.com/photo-1519823551278-64ac92734fb1' },
+        { name:'Dermatology', image:'https://images.pexels.com/photos/3762445/pexels-photo-3762445.jpeg' },
+        { name:'Veterinary Medicine', image:'https://images.unsplash.com/photo-1548199973-03cce0bbc87b' },
+        { name:'Pediatric Compounding', image:'https://images.unsplash.com/photo-1566004100631-35d015d6a491' },
+        { name:"Men's Health", image:'https://images.pexels.com/photos/4198023/pexels-photo-4198023.jpeg' },
+        { name:'Custom Medications', image:'https://images.unsplash.com/photo-1576091160550-2173dba999ef' },
+      ];
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Our Services & Medicines</h1>
+          <section className="mb-10 text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4">Crafting Medications Just for You</h2>
+            <p className="text-sm sm:text-base text-compoundit-dark-gray max-w-3xl mx-auto">
+              At CompoundIT, our compounded medicines are custom-prepared to meet your precise health requirements.
+            </p>
+          </section>
+          <section className="bg-compoundit-light-green p-4 sm:p-6 rounded-xl shadow-lg text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Our Areas of Compounding</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+              {areas.map((a,i)=>(<div key={i} className="group relative rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition duration-300">
+                <img src={a.image} alt={a.name} className="w-full h-32 sm:h-48 object-cover"/>
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                  <h4 className="text-white text-md sm:text-lg font-bold text-center p-2">{a.name}</h4>
+                </div>
+              </div>))}
+            </div>
+          </section>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200">
+              <h3 className="text-xl md:text-2xl font-bold mb-3">Customization Options</h3>
+              <div className="space-y-4 text-compoundit-dark-gray">
+                <p><strong>Dosage Strengths:</strong> Exact strengths not commercially available.</p>
+                <p><strong>Unique Forms:</strong> Creams, gels, suppositories, oral liquids, lozenges.</p>
+                <p><strong>Allergen-Free:</strong> Free of dyes, lactose, gluten, preservatives.</p>
+                <p><strong>Flavouring:</strong> Palatable flavours for kids or pets.</p>
+                <p><strong>Combined Medications:</strong> Multiple meds in one dosage.</p>
+              </div>
+            </div>
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200">
+              <h3 className="text-xl md:text-2xl font-bold mb-3">Benefits of Compounded Medicine</h3>
+              <div className="space-y-4 text-compoundit-dark-gray">
+                <p><strong>Personalised Treatment:</strong> Tailored to your body's needs.</p>
+                <p><strong>Sensitivity Avoidance:</strong> Skip allergens you react to.</p>
+                <p><strong>Improved Adherence:</strong> Easier forms and pleasant flavours.</p>
+                <p><strong>Optimal Dosing:</strong> Precise dose, minimal side effects.</p>
+                <p><strong>Access to Meds:</strong> For discontinued or scarce drugs.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const FAQsPage = () => {
+      const faqs = [
+        { q:'What is a compounding pharmacy?', a:'A compounding pharmacy is where pharmacists create custom medications from scratch to meet unique patient needs.' },
+        { q:'Is compounded medication safe?', a:'Yes, when prepared by licensed pharmacists following strict standards using pharmaceutical-grade ingredients.' },
+        { q:'Do I need a prescription?', a:'Yes, a valid prescription from a licensed practitioner is required for compounded meds.' },
+        { q:'How do I order?', a:'Bring or send your prescription to us; we’ll prepare and notify you when ready.' },
+        { q:'Do you ship?', a:'Yes — Australia-wide shipping with tracking available (2–5 business days).' },
+        { q:'What payment methods?', a:'We accept Visa, MasterCard, EFTPOS, and bank transfer.' }
+      ];
+      const [openIndex, setOpenIndex] = React.useState(null);
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
+          <div className="space-y-4">
+            {faqs.map((f,i)=>(<div key={i} className="border border-compoundit-light-green rounded-lg overflow-hidden">
+              <button className="w-full text-left p-4 flex justify-between items-center hover:bg-white" onClick={()=>setOpenIndex(openIndex===i?null:i)}>
+                <span className="text-lg sm:text-xl font-semibold">{f.q}</span>
+                <svg className={`w-6 h-6 transform duration-200 ${openIndex===i?'rotate-180':''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              {openIndex===i && <div className="p-4 text-compoundit-dark-gray">{f.a}</div>}
+            </div>))}
+          </div>
+        </div>
+      );
+    };
+
+    const ContactUsPage = () => {
+      const [isSubmitted, setIsSubmitted] = React.useState(false);
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Get in Touch</h1>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold mb-4">Our Details</h2>
+              <div className="space-y-4 text-compoundit-dark-gray">
+                <p><strong>Address:</strong> 8/441 Hoxton Park Rd, Hinchinbrook NSW 2168</p>
+                <p><strong>Phone:</strong> (02) 8783 6777</p>
+                <p><strong>Email:</strong> info@compoundit.com.au</p>
+                <p><strong>Opening Hours:</strong> Mon–Fri: 9am–5pm, Sat: 9am–1pm, Sun: Closed</p>
+              </div>
+              <div className="mt-6 rounded-md h-64 md:h-96">
+                <iframe
+                  src="https://maps.google.com/maps?q=8/441%20Hoxton%20Park%20Rd,%20Hinchinbrook%20NSW%202168&z=15&output=embed"
+                  width="100%" height="100%" style={{border:0,borderRadius:'8px'}}
+                  allowFullScreen="" loading="lazy"
+                />
+              </div>
+            </div>
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200">
+              <h2 className="text-2xl font-semibold mb-4">Send Us an Enquiry</h2>
+              {isSubmitted ? (
+                <div className="text-center p-6 md:p-10 flex flex-col items-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                    </svg>
                   </div>
-              </section>
-
-              {/* Intro Section */}
-              <section className="grid md:grid-cols-2 gap-8 items-center mb-12">
-                  <div className="bg-compoundit-light-green p-6 rounded-lg shadow-md">
-                      {/* MOBILE CHANGE: Responsive font size */}
-                      <h2 className="text-2xl md:text-3xl font-bold text-compoundit-text mb-4">What is Compounding?</h2>
-                      <p className="text-compoundit-dark-gray leading-relaxed">
-                          Compounding is the art and science of preparing customised medications for individual patients. It allows pharmacists to work with prescribers to create medications in specific dosages, forms (creams, liquids, capsules), or without certain allergens, that are not commercially available.
-                      </p>
+                  <h3 className="text-xl sm:text-2xl font-bold mt-4">Thank you!</h3>
+                  <p className="text-compoundit-dark-gray">Your message has been sent. We’ll get back to you shortly.</p>
+                </div>
+              ) : (
+                <form
+                  onSubmit={async e => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    try {
+                      const res = await fetch("https://formsubmit.co/ajax/shop.compounding@gmail.com", {
+                        method:"POST", headers:{Accept:"application/json"}, body:formData
+                      });
+                      if(res.ok){ setIsSubmitted(true); e.target.reset(); }
+                      else throw new Error();
+                    } catch {
+                      alert("Error. Please try again.");
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium mb-1">Your Name</label>
+                    <input type="text" id="name" name="name" required className="w-full p-2 border rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent"/>
                   </div>
-                  <div className="bg-compoundit-light-green p-6 rounded-lg shadow-md">
-                      <h2 className="text-2xl md:text-3xl font-bold text-compoundit-text mb-4">Why Choose CompoundIt?</h2>
-                      <ul className="list-disc list-inside text-compoundit-dark-gray space-y-2">
-                          <li>Tailored solutions for unique patient needs.</li>
-                          <li>Expert pharmacists with specialised training.</li>
-                          <li>High-quality ingredients and strict safety standards.</li>
-                          <li>Comprehensive consultations and ongoing support.</li>
-                      </ul>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-1">Your Email</label>
+                    <input type="email" id="email" name="email" required className="w-full p-2 border rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent"/>
                   </div>
-              </section>
-
-              {/* Core Services Section */}
-				<section className="text-center bg-white p-4 md:p-8 rounded-xl shadow-lg mb-12">
-				  <h2 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8">Our Core Services</h2>
-				  <p className="text-lg text-compoundit-dark-gray max-w-3xl mx-auto mb-10">
-					We offer a comprehensive range of services designed to provide you with the best personalised pharmaceutical care.
-				  </p>
-
-				  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-					{services.map((service, index) => (
-					  <div key={index} className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md text-center flex flex-col items-center">
-						<div className="w-full flex justify-center items-center mb-4">
-						  {service.icon}
-						</div>
-						<h3 className="text-base sm:text-lg font-semibold text-compoundit-text mb-1 text-center">{service.title}</h3>
-						<p className="text-sm sm:text-base text-compoundit-dark-gray text-center leading-relaxed">{service.description}</p>
-					  </div>
-					))}
-				  </div>
-
-				  <button onClick={() => setCurrentPage('services')} className="mt-10 px-8 py-3 bg-compoundit-accent text-white text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
-					View All Services
-				  </button>
-				</section>
-              {/* CTA Section */}
-              <section className="text-center bg-compoundit-light-green p-6 md:p-8 rounded-xl shadow-lg mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6">Ready to Experience Personalised Care?</h2>
-                  <p className="text-lg text-compoundit-dark-gray max-w-4xl mx-auto mb-8">
-                      Ordering your custom compounded medication is simple and convenient. Start your journey to better health today.
-                  </p>
-                  <button onClick={() => setCurrentPage('contact')} className="px-10 py-4 bg-compoundit-accent text-white text-xl font-bold rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition duration-300">
-                      Order Your Medication Now
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium mb-1">Your Message</label>
+                    <textarea id="message" name="message" rows="4" required className="w-full p-2 border rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent"/>
+                  </div>
+                  <input type="hidden" name="_captcha" value="false"/>
+                  <input type="hidden" name="_subject" value="New Enquiry from CompoundIT Website!"/>
+                  <button type="submit" className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md hover:bg-opacity-90 transition">
+                    Send Message
                   </button>
-              </section>
-
-              {/* Commitment Section */}
-              <section className="text-center bg-white p-4 md:p-8 rounded-xl shadow-lg">
-                  <h2 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6">Our Commitment to Your Health</h2>
-                  <p className="text-lg text-compoundit-dark-gray max-w-4xl mx-auto">
-                      We believe in a collaborative approach to healthcare, working closely with you and your doctor to achieve optimal health outcomes. Your well-being is our priority.
-                  </p>
-              </section>
+                </form>
+              )}
             </div>
-          );
-        };
+          </div>
+        </div>
+      );
+    };
 
-        // About Us Page
-        const AboutUsPage = () => {
-          return (
-            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6 text-center">About CompoundIt Pharmacy</h1>
-              <section className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Our Mission</h2>
-                <p className="text-compoundit-dark-gray leading-relaxed">
-                  At CompoundIt, our mission is to provide personalised, high-quality pharmaceutical compounding services that meet the unique needs of each patient. We are committed to fostering health and wellness by collaborating with healthcare practitioners and empowering individuals through education and tailored medication solutions.
-                </p>
-              </section>
-              <section className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Our History</h2>
-                <p className="text-compoundit-dark-gray leading-relaxed">
-                  Established in 2023, CompoundIt was founded on the principle that one-size-fits-all medication doesn't always work. We saw a growing need for customised pharmaceutical solutions and dedicated ourselves to mastering the art and science of compounding. From humble beginnings, we have grown into a trusted name in personalised healthcare, serving our community with integrity and innovation.
-                </p>
-              </section>
-              <section>
-                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Our Values</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="bg-compoundit-light-green p-5 rounded-lg shadow-md">
-                    <h3 className="text-xl font-bold text-compoundit-text mb-2">Patient-Centric Care</h3>
-                    <p className="text-compoundit-dark-gray">Your health and unique needs are at the core of everything we do.</p>
-                  </div>
-                  <div className="bg-compoundit-light-green p-5 rounded-lg shadow-md">
-                    <h3 className="text-xl font-bold text-compoundit-text mb-2">Quality & Safety</h3>
-                    <p className="text-compoundit-dark-gray">We adhere to the highest standards of quality and safety.</p>
-                  </div>
-                  <div className="bg-compoundit-light-green p-5 rounded-lg shadow-md">
-                    <h3 className="text-xl font-bold text-compoundit-text mb-2">Expertise & Innovation</h3>
-                    <p className="text-compoundit-dark-gray">Our pharmacists are continuously advancing their knowledge in compounding.</p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          );
-        };
-
-        // Our Team Page
-        const OurTeamPage = () => {
-          const teamMembers = [
-            {
-              name: 'Tony Quach',
-              title: 'Lead Compounding Pharmacist Manager',
-              bio: 'Tony leads our pharmacy with a passion for patient care and innovative compounding solutions, ensuring the highest standards of quality and service.',
-              image: 'https://placehold.co/150x150/E8F8F5/374151?text=TQ',
-            },
-            {
-              name: 'Carmine Vitiello',
-              title: 'Senior Compounding Technician',
-              bio: 'Carmine brings meticulous attention to detail and extensive experience to our lab, guaranteeing precision and safety in every formulation.',
-              image: 'https://placehold.co/150x150/FFFFFF/374151?text=CV',
-            },
-            {
-              name: 'Andrew Mina',
-              title: 'Director and Proprietor',
-              bio: "Andrew's vision and leadership guide our commitment to providing accessible and personalised healthcare solutions for the community.",
-              image: 'https://placehold.co/150x150/E8F8F5/374151?text=AM',
-            },
-             {
-              name: 'Abanoub Mina',
-              title: 'Group Operations Manager',
-              bio: 'Abanoub oversees our daily operations, ensuring a seamless and efficient experience for both our patients and our team.',
-              image: 'https://placehold.co/150x150/FFFFFF/374151?text=AM',
-            },
-             {
-              name: 'George Gilto',
-              title: 'Senior Business Consultant',
-              bio: "George's expertise helps us grow and innovate, allowing us to better serve our community with cutting-edge compounding services.",
-              image: 'https://placehold.co/150x150/E8F8F5/374151?text=GG',
-            },
-          ];
-
-          return (
-            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Meet Our Expert Team</h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {teamMembers.map((member, index) => (
-                  <div key={index} className="bg-compoundit-light-green p-6 rounded-lg shadow-md text-center flex flex-col items-center">
-                    {/* MOBILE CHANGE: Responsive image size */}
-                    <img
-                      src={member.image}
-                      alt={`Photo of ${member.name}`}
-                      className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mb-4 ring-4 ring-compoundit-accent ring-opacity-50"
-                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x150/9CA3AF/FFFFFF?text=PIC'; }}
-                    />
-                    <h2 className="text-xl sm:text-2xl font-semibold text-compoundit-text mb-2">{member.name}</h2>
-                    <p className="text-compoundit-accent font-medium mb-3">{member.title}</p>
-                    <p className="text-compoundit-dark-gray leading-relaxed text-sm">{member.bio}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        };
-
-        // Our Services Page
-        const OurServicesPage = () => {
-          const compoundingAreas = [
-            { name: 'Hormone Replacement', image: 'https://images.pexels.com/photos/7615463/pexels-photo-7615463.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
-            { name: 'Pain Management', image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?q=80&w=1974&auto=format&fit=crop' },
-            { name: 'Dermatology', image: 'https://images.pexels.com/photos/3762445/pexels-photo-3762445.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
-            { name: 'Veterinary', image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2070&auto=format&fit=crop' },
-            { name: 'Sleep Treatments', image: 'https://images.unsplash.com/photo-1520206183501-b80df61043c2?auto=format&fit=crop&w=2070&q=80' },
-            { name: 'Paediatric', image: 'https://images.unsplash.com/photo-1566004100631-35d015d6a491?q=80&w=2070&auto=format&fit=crop' },
-            { name: "Men's Health", image: 'https://images.pexels.com/photos/4198023/pexels-photo-4198023.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
-            { name: 'Custom Medications', image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2070&auto=format&fit=crop' }
-          ];
-
-          return (
-            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Our Services & Medicines</h1>
-              <section className="mb-10 text-center">
-                <h2 className="text-2xl md:text-3xl font-semibold text-compoundit-text mb-4">Crafting Medications Just for You</h2>
-                <p className="text-compoundit-dark-gray leading-relaxed max-w-3xl mx-auto">
-                  At CompoundIT, we understand that standard medications don't always fit everyone. Our compounded medicines are custom-prepared to meet your precise health requirements, offering solutions when commercial products fall short.
-                </p>
-              </section>
-
-                <section className="bg-compoundit-light-green p-4 md:p-8 rounded-xl shadow-lg text-center mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-compoundit-text mb-4">Our Areas of Compounding</h2>
-                <p className="text-lg text-compoundit-dark-gray max-w-3xl mx-auto mb-8">
-                  We compound medications across a wide range of specialities. Here are some of the common areas we work with:
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                  {compoundingAreas.map((area, index) => (
-                    <div key={index} className="group relative rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
-                      {/* MOBILE CHANGE: Responsive image height */}
-                      <img src={area.image} alt={area.name} className="w-full h-32 sm:h-48 object-cover"/>
-                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                        <h4 className="text-white text-md sm:text-lg font-bold text-center p-2">{area.name}</h4>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                  <h3 className="text-xl md:text-2xl font-bold text-compoundit-text mb-3">Customisation Options</h3>
-                  <div className="space-y-4 text-compoundit-dark-gray">
-                      <p><strong className="block text-compoundit-text">Dosage Strengths</strong>Exact strengths not commercially available.</p>
-                      <p><strong className="block text-compoundit-text">Unique Dosage Forms</strong>Creams, gels, suppositories, oral liquids, or lozenges.</p>
-                      <p><strong className="block text-compoundit-text">Allergen-Free Formulations</strong>Free of dyes, lactose, gluten, or preservatives.</p>
-                      <p><strong className="block text-compoundit-text">Flavouring</strong>Palatable flavours for children or pets.</p>
-                      <p><strong className="block text-compoundit-text">Combined Medications</strong>Multiple compatible medications in a single dosage.</p>
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                  <h3 className="text-xl md:text-2xl font-bold text-compoundit-text mb-3">Benefits of Compounded Medicine</h3>
-                  <div className="space-y-4 text-compoundit-dark-gray">
-                      <p><strong className="block text-compoundit-text">Personalised Treatment</strong>Tailored specifically to your body's needs.</p>
-                      <p><strong className="block text-compoundit-text">Address Sensitivities</strong>Avoid ingredients you are allergic or sensitive to.</p>
-                      <p><strong className="block text-compoundit-text">Improved Adherence</strong>Easier-to-take forms and pleasant flavours improve compliance.</p>
-                      <p><strong className="block text-compoundit-text">Optimal Dosing</strong>Receive the precise dose required, minimising side effects.</p>
-                      <p><strong className="block text-compoundit-text">Access to Medications</strong>For discontinued or drugs in shortage.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        };
-
-        // FAQs Page
-        const FAQsPage = () => {
-          const faqs = [
-            {
-              question: 'What is a compounding pharmacy?',
-              answer: 'A compounding pharmacy is a specialised pharmacy where licensed pharmacists create customised medications from scratch. This is done to meet the unique needs of a patient when a commercially available product is not suitable. For example, we can change a tablet to a liquid, create specific dosage strengths, or formulate a medication to be free from allergens like gluten or dyes.'
-            },
-            {
-              question: 'Is compounded medication safe?',
-              answer: "Yes. All compounded medications are prepared by our licensed pharmacists in a controlled environment, adhering to the strict standards set by the Pharmacy Board of Australia and other regulatory bodies. We use only high-quality, pharmaceutical-grade ingredients to ensure the safety and efficacy of every product we make."
-            },
-            {
-              question: 'Do I need a prescription for compounded medication?',
-              answer: 'Yes, a valid prescription from a licensed healthcare practitioner (such as a doctor, dentist, or veterinarian) is required for any compounded medication. This ensures that the treatment is appropriate for your specific health needs and allows us to work directly with your prescriber for the best possible outcome.'
-            },
-            {
-                question: 'How do I order a compounded medication?',
-                answer: 'You can bring your prescription to our pharmacy in person, or your doctor can send it to us directly. You can also send us a photo of your script via our website to get started. We require the original prescription before we can dispense your medication.'
-            },
-            {
-                question: 'Do you offer shipping?',
-                answer: 'Yes, we offer reliable shipping Australia-wide. We use trusted courier services to ensure your medication arrives safely and promptly. Shipping fees may apply depending on your location and the size of your order.'
-            },
-            {
-                question: 'How long will shipping take?',
-                answer: 'Shipping times vary based on your location. Generally, you can expect your delivery within 2-5 business days after your medication has been prepared. We can provide tracking information so you can monitor your delivery.'
-            },
-            {
-                question: 'What payment methods do you accept?',
-                answer: 'We accept a variety of payment methods, including major credit cards (Visa, MasterCard), EFTPOS, and direct bank transfer. Please contact us if you have any specific payment questions.'
-            }
-          ];
-          const [openIndex, setOpenIndex] = React.useState(null);
-
-          return (
-            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Frequently Asked Questions</h1>
-              <div className="space-y-4">
-                {faqs.map((faq, index) => (
-                  <div key={index} className="border border-compoundit-light-green rounded-lg overflow-hidden">
-                    <button
-                      className="w-full text-left p-4 md:p-5 bg-compoundit-light-green hover:bg-white flex justify-between items-center transition-colors"
-                      onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                    >
-                      <span className="text-lg md:text-xl font-semibold text-compoundit-text">{faq.question}</span>
-                      <svg className={`w-6 h-6 transform transition-transform ${openIndex === index ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    {openIndex === index && (
-                      <div className="p-4 md:p-5 bg-white text-compoundit-dark-gray leading-relaxed">{faq.answer}</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        };
-
-        // Contact Us Page
-        const ContactUsPage = () => {
-          // This state checks the URL for a 'submitted' query parameter to show the success message.
-          const [isSubmitted, setIsSubmitted] = React.useState(false);
-
-          return (
-            <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-              <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Get in Touch</h1>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-compoundit-light-green p-6 rounded-lg shadow-md">
-                  <h2 className="text-2xl font-semibold text-compoundit-text mb-4">Our Details</h2>
-                  <div className="space-y-4 text-compoundit-dark-gray">
-                    <p><strong>Address:</strong> 8/441 Hoxton Park Rd, Hinchinbrook NSW 2168</p>
-                    <p><strong>Phone:</strong> (02) 8783 6777</p>
-                    <p><strong>Email:</strong> info@compoundit.com.au</p>
-                  </div>
-                   <div className="mt-6 rounded-md h-64 md:h-96">
-                   <iframe
-                     src="https://maps.google.com/maps?q=8/441%20Hoxton%20Park%20Rd,%20Hinchinbrook%20NSW%202168&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                     width="100%"
-                     height="100%"
-                     style={{ border: 0, borderRadius: '8px' }}
-                     allowFullScreen=""
-                     loading="lazy"
-                     referrerPolicy="no-referrer-when-downgrade"
-                   ></iframe>
-                 </div>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                  <h2 className="text-2xl font-semibold text-compoundit-text mb-4">Send Us an Enquiry</h2>
-                  {isSubmitted ? (
-                      <div className="text-center p-6 md:p-10 flex flex-col items-center justify-center h-full">
-                          {/* MOBILE CHANGE: Responsive icon size */}
-                          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center">
-                              <svg className="w-8 h-8 sm:w-10 sm:h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                              </svg>
-                          </div>
-                          <h3 className="text-xl sm:text-2xl font-bold text-compoundit-text mt-4">Thank you!</h3>
-                          <p className="text-compoundit-dark-gray">Your message has been sent successfully. We will get back to you shortly.</p>
-                      </div>
-                  ) : (
-						<form
-						  className="space-y-4"
-						  onSubmit={async (e) => {
-							e.preventDefault();
-							const form = e.target;
-							const formData = new FormData(form);
-
-							try {
-							  const response = await fetch("https://formsubmit.co/ajax/shop.compounding@gmail.com", {
-								method: "POST",
-								headers: {
-								  'Accept': 'application/json',
-								},
-								body: formData,
-							  });
-
-							  if (response.ok) {
-								setIsSubmitted(true);
-								form.reset();
-							  } else {
-								alert("Something went wrong. Please try again.");
-							  }
-							} catch (err) {
-							  alert("Network error. Please check your connection.");
-							}
-						  }}
-						>
-						  <div>
-							<label htmlFor="name" className="block text-sm font-medium mb-1 text-compoundit-text">Your Name</label>
-							<input
-							  type="text"
-							  id="name"
-							  name="name"
-							  required
-							  className="w-full p-2 rounded-md border border-gray-300 focus:ring-compoundit-accent focus:border-compoundit-accent"
-							/>
-						  </div>
-						  <div>
-							<label htmlFor="email" className="block text-sm font-medium mb-1 text-compoundit-text">Your Email</label>
-							<input
-							  type="email"
-							  id="email"
-							  name="email"
-							  required
-							  className="w-full p-2 rounded-md border border-gray-300 focus:ring-compoundit-accent focus:border-compoundit-accent"
-							/>
-						  </div>
-						  <div>
-							<label htmlFor="message" className="block text-sm font-medium mb-1 text-compoundit-text">Your Message</label>
-							<textarea
-							  id="message"
-							  name="message"
-							  rows="4"
-							  required
-							  className="w-full p-2 rounded-md border border-gray-300 focus:ring-compoundit-accent focus:border-compoundit-accent"
-							></textarea>
-						  </div>
-
-						  {/* Hidden fields for FormSubmit configuration */}
-						  <input type="hidden" name="_captcha" value="false" />
-						  <input type="hidden" name="_subject" value="New Enquiry from CompoundIt Website!" />
-
-						  <button
-							type="submit"
-							className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md shadow-lg hover:bg-opacity-90 transition-colors"
-						  >
-							Send Message
-						  </button>
-						</form>
-
-
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        };
-
-        // Render the App
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
 </body>
 </html>
