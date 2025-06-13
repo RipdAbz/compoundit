@@ -113,7 +113,7 @@
 				<img
 				  src="./CompoundItLogo.png"
 				  alt="CompoundIT Logo"
-				  className="h-[36px] w-auto object-contain"
+				  className="h-[36px] sm:h-[44px] md:h-[52px] w-auto object-contain"
 				  style={{ maxHeight: '60px' }}
 				  onClick={() => setCurrentPage('home')}
                 onError={e=>{e.target.onerror=null;e.target.src='https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT'}}
@@ -391,33 +391,53 @@
       );
     };
 
-    const FAQsPage = () => {
-      const faqs = [
-        { q:'What is a compounding pharmacy?', a:'A compounding pharmacy is where pharmacists create custom medications from scratch to meet unique patient needs.' },
-        { q:'Is compounded medication safe?', a:'Yes, when prepared by licensed pharmacists following strict standards using pharmaceutical-grade ingredients.' },
-        { q:'Do I need a prescription?', a:'Yes, a valid prescription from a licensed practitioner is required for compounded meds.' },
-        { q:'How do I order?', a:'Bring or send your prescription to us; we’ll prepare and notify you when ready.' },
-        { q:'Do you ship?', a:'Yes — Australia-wide shipping with tracking available (2–5 business days).' },
-        { q:'What payment methods?', a:'We accept Visa, MasterCard, EFTPOS, and bank transfer.' }
-      ];
-      const [openIndex, setOpenIndex] = React.useState(null);
-      return (
-        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
-          <div className="space-y-4">
-            {faqs.map((f,i)=>(<div key={i} className="border border-compoundit-light-green rounded-lg overflow-hidden">
-              <button className="w-full text-left p-4 flex justify-between items-center hover:bg-white" onClick={()=>setOpenIndex(openIndex===i?null:i)}>
-                <span className="text-lg sm:text-xl font-semibold">{f.q}</span>
-                <svg className={`w-6 h-6 transform duration-200 ${openIndex===i?'rotate-180':''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-              </button>
-              {openIndex===i && <div className="p-4 text-compoundit-dark-gray">{f.a}</div>}
-            </div>))}
-          </div>
-        </div>
-      );
-    };
+		const FAQsPage = () => {
+		  const faqs = [
+			{ q:'What is a compounding pharmacy?', a:'A compounding pharmacy is where pharmacists create custom medications from scratch to meet unique patient needs.' },
+			{ q:'Is compounded medication safe?', a:'Yes, when prepared by licensed pharmacists following strict standards using pharmaceutical-grade ingredients.' },
+			{ q:'Do I need a prescription?', a:'Yes, a valid prescription from a licensed practitioner is required for compounded meds.' },
+			{ q:'How do I order?', a:'Bring or send your prescription to us; we’ll prepare and notify you when ready.' },
+			{ q:'Do you ship?', a:'Yes — Australia-wide shipping with tracking available (2–5 business days).' },
+			{ q:'What payment methods?', a:'We accept Visa, MasterCard, EFTPOS, and bank transfer.' }
+		  ];
+		  const [openIndex, setOpenIndex] = React.useState(null);
+
+		  return (
+			<div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+			  <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
+			  <div className="space-y-4">
+				{faqs.map((faq, index) => (
+				  <div
+					key={index}
+					className="bg-compoundit-light-green border border-compoundit-light-green rounded-lg overflow-hidden"
+				  >
+					<button
+					  className="w-full text-left p-4 flex justify-between items-center hover:bg-white transition-colors"
+					  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+					>
+					  <span className="text-lg sm:text-xl font-semibold text-compoundit-text">{faq.q}</span>
+					  <svg
+						className={`w-6 h-6 transform transition-transform duration-200 ${openIndex === index ? 'rotate-180' : ''}`}
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					  >
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+					  </svg>
+					</button>
+					{openIndex === index && (
+					  <div className="p-4 bg-white text-compoundit-dark-gray leading-relaxed">
+						{faq.a}
+					  </div>
+					)}
+				  </div>
+				))}
+			  </div>
+			</div>
+		  );
+		};
+
+
 
     const ContactUsPage = () => {
       const [isSubmitted, setIsSubmitted] = React.useState(false);
