@@ -320,26 +320,63 @@
       </div>
     );
 
-    const OurTeamPage = () => {
-      const team = [
-        { name:'Dr. Emily Chen, Pharm.D.', title:'Lead Compounding Pharmacist', bio:'Dr. Chen brings over 15 years of experience...', image:'https://placehold.co/150x150/E8F8F5/374151?text=EC' },
-        { name:'Mr. David Lee, B.Pharm', title:'Clinical Compounding Specialist', bio:'David is an expert in pain management...', image:'https://placehold.co/150x150/FFFFFF/374151?text=DL' },
-        { name:'Ms. Sarah Green, M.Pharm', title:'Patient Care Pharmacist', bio:'Sarah excels in patient support...', image:'https://placehold.co/150x150/E8F8F5/374151?text=SG' },
-      ];
-      return (
-        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Meet Our Expert Practitioners</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {team.map((m,i)=>(<div key={i} className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md text-center flex flex-col items-center">
-              <img src={m.image} alt={m.name} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full mb-4 ring-4 ring-compoundit-accent ring-opacity-50"/>
-              <h2 className="text-xl sm:text-2xl font-semibold mb-2">{m.name}</h2>
-              <p className="text-compoundit-accent font-medium mb-3">{m.title}</p>
-              <p className="text-sm sm:text-base text-compoundit-dark-gray leading-relaxed">{m.bio}</p>
-            </div>))}
-          </div>
-        </div>
-      );
-    };
+	// Our Team Page
+	const OurTeamPage = () => {
+	  const teamMembers = [
+	    {
+	      name: 'Tony Quach',
+	      title: 'Lead Compounding Pharmacist Manager',
+	      bio: 'Tony leads our pharmacy with a passion for patient care and innovative compounding solutions, ensuring the highest standards of quality and service.',
+	      image: 'https://placehold.co/150x150/E8F8F5/374151?text=TQ',
+	    },
+	    {
+	      name: 'Carmine Vitiello',
+	      title: 'Senior Compounding Technician',
+	      bio: 'Carmine brings meticulous attention to detail and extensive experience to our lab, guaranteeing precision and safety in every formulation.',
+	      image: 'https://placehold.co/150x150/FFFFFF/374151?text=CV',
+	    },
+	    {
+	      name: 'Andrew Mina',
+	      title: 'Director and Proprietor',
+	      bio: "Andrew's vision and leadership guide our commitment to providing accessible and personalised healthcare solutions for the community.",
+	      image: 'https://placehold.co/150x150/E8F8F5/374151?text=AM',
+	    },
+	     {
+	      name: 'Abanoub Mina',
+	      title: 'Group Operations Manager',
+	      bio: 'Abanoub oversees our daily operations, ensuring a seamless and efficient experience for both our patients and our team.',
+	      image: 'https://placehold.co/150x150/FFFFFF/374151?text=AM',
+	    },
+	     {
+	      name: 'George Gilto',
+	      title: 'Senior Business Consultant',
+	      bio: "George's expertise helps us grow and innovate, allowing us to better serve our community with cutting-edge compounding services.",
+	      image: 'https://placehold.co/150x150/E8F8F5/374151?text=GG',
+	    },
+	  ];
+	
+	  return (
+	    <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+	      <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Meet Our Expert Team</h1>
+	      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+		{teamMembers.map((member, index) => (
+		  <div key={index} className="bg-compoundit-light-green p-6 rounded-lg shadow-md text-center flex flex-col items-center">
+		    {/* MOBILE CHANGE: Responsive image size */}
+		    <img
+		      src={member.image}
+		      alt={`Photo of ${member.name}`}
+		      className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mb-4 ring-4 ring-compoundit-accent ring-opacity-50"
+		      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x150/9CA3AF/FFFFFF?text=PIC'; }}
+		    />
+		    <h2 className="text-xl sm:text-2xl font-semibold text-compoundit-text mb-2">{member.name}</h2>
+		    <p className="text-compoundit-accent font-medium mb-3">{member.title}</p>
+		    <p className="text-compoundit-dark-gray leading-relaxed text-sm">{member.bio}</p>
+		  </div>
+		))}
+	      </div>
+	    </div>
+	  );
+	};
 
     const OurServicesPage = () => {
       const areas = [
