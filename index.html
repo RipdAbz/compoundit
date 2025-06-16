@@ -115,7 +115,7 @@
 	  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-y-2 sm:gap-y-0">
 		
 		{/* Logo + Name */}
-		<div className="flex items-center space-x-2">
+		<div className="flex items-center space-x-2 min-w-0">
 		  <img
 			src="./CompoundItLogo.png"
 			alt="CompoundIT Logo"
@@ -126,11 +126,10 @@
 			  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIT';
 			}}
 		  />
-		  <span className="text-xl sm:text-2xl font-bold text-compoundit-text">
+		  <span className="text-xl sm:text-2xl font-bold text-compoundit-text whitespace-nowrap truncate">
 			Compound<span className="text-compoundit-accent">It</span>
 		  </span>
 		</div>
-
 		{/* Nav buttons */}
 		<div className="sticky top-0 bg-white z-50 flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-2 text-sm md:text-base text-center py-2">
 		  {[
