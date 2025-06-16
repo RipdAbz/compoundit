@@ -68,23 +68,27 @@
 
   <script type="text/babel">
     const App = () => {
-      const defaultPage = sessionStorage.getItem("currentPage") || "home";
+	const validPages = ['home', 'about', 'team', 'services', 'faqs', 'contact', 'practitioners', 'upload'];
+	const savedPage = sessionStorage.getItem("currentPage");
+	const defaultPage = validPages.includes(savedPage) ? savedPage : 'home';
       const [currentPage, setCurrentPage] = React.useState(defaultPage);
       React.useEffect(() => {
         sessionStorage.setItem("currentPage", currentPage);
       }, [currentPage]);
 
-      const renderPage = () => {
-        switch (currentPage) {
-          case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
-          case 'about': return <AboutUsPage />;
-          case 'team': return <OurTeamPage />;
-          case 'services': return <OurServicesPage />;
-          case 'faqs': return <FAQsPage />;
-          case 'contact': return <ContactUsPage />;
-          default: return <HomePage setCurrentPage={setCurrentPage} />;
-        }
-      };
+		const renderPage = () => {
+		  switch (currentPage) {
+			case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
+			case 'about': return <AboutUsPage />;
+			case 'team': return <OurTeamPage />;
+			case 'services': return <OurServicesPage />;
+			case 'faqs': return <FAQsPage />;
+			case 'contact': return <ContactUsPage />;
+			case 'practitioners': return <div className="p-8 bg-white rounded-xl shadow-lg">Practitioner Login Page Coming Soon</div>;
+			case 'upload': return <div className="p-8 bg-white rounded-xl shadow-lg">Upload Script Page Coming Soon</div>;
+			default: return <HomePage setCurrentPage={setCurrentPage} />;
+		  }
+		};
 
       return (
         <div className="font-inter antialiased bg-compoundit-gray text-compoundit-text min-h-screen flex flex-col">
@@ -126,6 +130,7 @@
 			Compound<span className="text-compoundit-accent">It</span>
 		  </span>
 		</div>
+
 		{/* Nav buttons */}
 		<div className="sticky top-0 bg-white z-50 flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-2 text-sm md:text-base text-center py-2">
 		  {[
@@ -148,11 +153,25 @@
 			  {item.name}
 			</button>
 		  ))}
-		</div>
 
+		  {/* New buttons */}
+		  <div className="flex gap-2 ml-4">
+			<button
+			  onClick={() => setCurrentPage('practitioners')}
+			  className="px-3 py-1 rounded-lg transition-colors duration-200 text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text"
+			>
+			  Practitioners Login
+			</button>
+			<button
+			  onClick={() => setCurrentPage('upload')}
+			  className="px-3 py-1 rounded-lg transition-colors duration-200 bg-compoundit-accent text-white hover:bg-opacity-90"
+			>
+			  Upload Script
+			</button>
+		  </div>
+		</div>
 	  </div>
 	</nav>
-
 
       );
     };
