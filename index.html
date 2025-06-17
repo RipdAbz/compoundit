@@ -95,7 +95,7 @@
           <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
 			{/* Sticky buttons aligned with content boundary */}
 			<div className="sticky top-0 z-50 bg-white">
-			  <div className="max-w-7xl mx-auto flex justify-end px-4 pt-0 mt-[-18px]">
+			  <div className="max-w-7xl mx-auto flex justify-end px-4 pt-0 mt-[-1px]">
 				<div className="bg-white shadow-md rounded-md flex gap-2 px-2 py-1">
 				  <button
 					onClick={() => setCurrentPage('practitioners')}
@@ -141,7 +141,7 @@
 		{/* Logo + Name */}
 		<div className="flex items-center space-x-2 flex-shrink-0">
 		  <img
-			src="./CompoundItLogo.png"
+			src="CompoundItLogo.png"
 			alt="CompoundIT Logo"
 			className="h-[90px] sm:h-[100px] md:h-[110px] max-h-[120px] w-auto object-contain cursor-pointer"
 			onClick={() => setCurrentPage('home')}
