@@ -14,6 +14,7 @@
     @tailwind utilities;
     :root {
       --colour-compoundit-light-green: #E8F8F5;
+	  --colour-compoundit-lightest-green: #c6f1e7;
       --colour-compoundit-accent: #86D9C5;
       --colour-compoundit-gray: #FFFFFF;
       --colour-compoundit-dark-gray: #6B7280;
@@ -21,6 +22,7 @@
       --colour-black-icon: #000000;
     }
     .bg-compoundit-light-green { background-color: var(--colour-compoundit-light-green); }
+	.bg-compoundit-lightest-green { background-color: var(--colour-compoundit-lightest-green);}
     .bg-compoundit-accent { background-color: var(--colour-compoundit-accent); }
     .bg-compoundit-gray { background-color: var(--colour-compoundit-gray); }
     .text-compoundit-dark-gray { color: var(--colour-compoundit-dark-gray); }
@@ -95,19 +97,23 @@
           <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
 			{/* Sticky buttons aligned with content boundary */}
 			<div className="sticky top-0 z-50 bg-white">
-			  <div className="max-w-7xl mx-auto flex justify-end px-4 pt-0 mt-[-1px]">
-				<div className="bg-white shadow-md rounded-md flex gap-2 px-2 py-1">
+			  <div className="max-w-7xl mx-auto flex justify-end pr-12 sm:pr-16 md:pr-8 pt-0 mt-[-1px]">
+				<div className="bg-compoundit-lightest-green md rounded-md flex gap-2 px-2 py-1">
 				  <button
 					onClick={() => setCurrentPage('practitioners')}
-					className="text-sm px-2 py-1 rounded-md text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text transition"
+					className={`text-sm md:text-base px-3 py-1 rounded-lg transition-colors duration-200 ${
+					  currentPage === 'practitioners'
+						? 'text-black font-bold'
+						: 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
+					}`}
 				  >
 					Practitioners Login
 				  </button>
 				  <button
 					onClick={() => setCurrentPage('upload')}
-					className={`text-sm px-2 py-1 rounded-md transition ${
+					className={`text-sm md:text-base px-3 py-1 rounded-lg transition-colors duration-200 ${
 					  currentPage === 'upload'
-						? 'bg-compoundit-accent text-white shadow'
+						? 'text-black font-bold'
 						: 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
 					}`}
 				  >
@@ -116,7 +122,6 @@
 				</div>
 			  </div>
 			</div>
-
           <main className="flex-grow w-full max-w-7xl mx-auto px-0 pt-0 pb-0">
             {renderPage()}
           </main>
