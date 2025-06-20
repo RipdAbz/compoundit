@@ -15,7 +15,7 @@
     @tailwind utilities;
     :root {
       --colour-compoundit-light-green: #E8F8F5;
-	  --colour-compoundit-lightest-green: #c6f1e7;
+      --colour-compoundit-lightest-green: #c6f1e7;
       --colour-compoundit-accent: #86D9C5;
       --colour-compoundit-gray: #FFFFFF;
       --colour-compoundit-dark-gray: #6B7280;
@@ -23,7 +23,7 @@
       --colour-black-icon: #000000;
     }
     .bg-compoundit-light-green { background-color: var(--colour-compoundit-light-green); }
-	.bg-compoundit-lightest-green { background-color: var(--colour-compoundit-lightest-green);}
+    .bg-compoundit-lightest-green { background-color: var(--colour-compoundit-lightest-green);}
     .bg-compoundit-accent { background-color: var(--colour-compoundit-accent); }
     .bg-compoundit-gray { background-color: var(--colour-compoundit-gray); }
     .text-compoundit-dark-gray { color: var(--colour-compoundit-dark-gray); }
@@ -69,69 +69,127 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+  <!-- Firebase SDK UMD Scripts (Safe for inline React/Babel setup) -->
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth-compat.js"></script>
+
   <script type="text/babel">
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiID9o-67RfwYvcMmulSjgp1HarkxP0EM",
+      authDomain: "compound-it.firebaseapp.com",
+      projectId: "compound-it",
+      storageBucket: "compound-it.firebasestorage.app",
+      messagingSenderId: "712487073463",
+      appId: "1:712487073463:web:33c7d738b79bbb2565bf32",
+      measurementId: "G-875PW0QZX3"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
     const App = () => {
-	const validPages = ['home', 'about', 'team', 'services', 'faqs', 'contact', 'practitioners', 'upload'];
-	const savedPage = sessionStorage.getItem("currentPage");
-	const defaultPage = validPages.includes(savedPage) ? savedPage : 'home';
+      // Define valid pages for navigation, including 'register'
+      const validPages = ['home', 'about', 'team', 'services', 'faqs', 'contact', 'practitioners', 'upload', 'dashboard', 'register'];
+      // Retrieve current page from session storage, default to 'home' if invalid or not found
+      const savedPage = sessionStorage.getItem("currentPage");
+      const defaultPage = validPages.includes(savedPage) ? savedPage : 'home';
       const [currentPage, setCurrentPage] = React.useState(defaultPage);
+      const [user, setUser] = React.useState(null); // State to store logged-in user
+      const [isAuthLoading, setIsAuthLoading] = React.useState(true); // State to track auth loading
+
+      // Effect to persist current page in session storage
       React.useEffect(() => {
         sessionStorage.setItem("currentPage", currentPage);
       }, [currentPage]);
 
-		const renderPage = () => {
-		  switch (currentPage) {
-			case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
-			case 'about': return <AboutUsPage />;
-			case 'team': return <OurTeamPage />;
-			case 'services': return <OurServicesPage />;
-			case 'faqs': return <FAQsPage />;
-			case 'contact': return <ContactUsPage />;
-			case 'practitioners': return <div className="p-8 bg-white rounded-xl shadow-lg">Practitioner Login Page Coming Soon</div>;
-			case 'upload': return <div className="p-8 bg-white rounded-xl shadow-lg">Upload Script Page Coming Soon</div>;
-			default: return <HomePage setCurrentPage={setCurrentPage} />;
-		  }
-		};
+      // Effect to listen for Firebase authentication state changes
+      React.useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+          setUser(currentUser); // Update user state
+          setIsAuthLoading(false); // Auth loading is complete
+
+          // If user logs in and was on practitioners page, redirect to dashboard
+          if (currentUser && currentPage === 'practitioners') {
+            setCurrentPage('dashboard');
+          }
+          // If user logs out and was on dashboard, redirect to home
+          if (!currentUser && currentPage === 'dashboard') {
+            setCurrentPage('home');
+          }
+        });
+        return () => unsubscribe(); // Cleanup the subscription on component unmount
+      }, [currentPage]); // Re-run if currentPage changes to handle redirects
+
+      // Function to render the current page based on currentPage state
+      const renderPage = () => {
+        if (isAuthLoading) {
+          return <div className="text-center p-8 text-compoundit-text">Loading authentication...</div>;
+        }
+
+        switch (currentPage) {
+          case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
+          case 'about': return <AboutUsPage />;
+          case 'team': return <OurTeamPage />;
+          case 'services': return <OurServicesPage />;
+          case 'faqs': return <FAQsPage />;
+          case 'contact': return <ContactUsPage />;
+          case 'practitioners':
+            // If user is logged in, show dashboard; otherwise, show login page
+            return user ? <PractitionerDashboard auth={auth} setCurrentPage={setCurrentPage} /> : <PractitionerLoginPage auth={auth} setCurrentPage={setCurrentPage} />;
+          case 'dashboard':
+            // If user is logged in, show dashboard; otherwise, show home page (or login page if preferred)
+            return user ? <PractitionerDashboard auth={auth} setCurrentPage={setCurrentPage} /> : <HomePage setCurrentPage={setCurrentPage} />;
+          case 'register': return <PractitionerRegistrationPage auth={auth} setCurrentPage={setCurrentPage} />;
+          case 'upload': return <UploadScriptPage />; // Render the new UploadScriptPage
+          default: return <HomePage setCurrentPage={setCurrentPage} />;
+        }
+      };
 
       return (
         <div className="font-inter antialiased bg-compoundit-gray text-compoundit-text min-h-screen flex flex-col">
-          <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
-			{/* Sticky buttons aligned with content boundary */}
-			<div className="sticky top-0 z-50 bg-white">
-			  <div className="max-w-7xl mx-auto flex justify-end pr-12 sm:pr-16 md:pr-8 pt-0 mt-[-1px]">
-				<div className="bg-compoundit-lightest-green md rounded-xl flex gap-2 px-1 py-1">
-				  <button
-					onClick={() => setCurrentPage('practitioners')}
-					className={`text-sm md:text-base px-3 py-1 rounded-lg transition-colors duration-200 ${
-					  currentPage === 'practitioners'
-						? 'text-black font-bold'
-						: 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
-					}`}
-				  >
-					Practitioners Login
-				  </button>
-				  <button
-					onClick={() => setCurrentPage('upload')}
-					className={`text-sm md:text-base px-3 py-1 rounded-lg transition-colors duration-200 ${
-					  currentPage === 'upload'
-						? 'text-black font-bold'
-						: 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
-					}`}
-				  >
-					Upload Script
-				  </button>
-				</div>
-			  </div>
-			</div>
+          {/* Navbar component */}
+          <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} user={user} />
+          {/* Sticky buttons for practitioners and script upload */}
+          <div className="sticky top-0 z-50 bg-white">
+            <div className="max-w-7xl mx-auto flex justify-end pr-12 sm:pr-16 md:pr-8 pt-0 mt-[-1px]">
+              <div className="bg-compoundit-lightest-green rounded-xl flex gap-2 px-1 py-1">
+                <button
+                  onClick={() => setCurrentPage('practitioners')}
+                  className={`text-sm md:text-base px-3 py-1 rounded-lg transition-colors duration-200 ${
+                    currentPage === 'practitioners' || currentPage === 'dashboard'
+                      ? 'text-black font-bold'
+                      : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
+                  }`}
+                >
+                  Practitioners Login
+                </button>
+                <button
+                  onClick={() => setCurrentPage('upload')}
+                  className={`text-sm md:text-base px-3 py-1 rounded-lg transition-colors duration-200 ${
+                    currentPage === 'upload'
+                      ? 'text-black font-bold'
+                      : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
+                  }`}
+                >
+                  Upload Script
+                </button>
+              </div>
+            </div>
+          </div>
+          {/* Main content area */}
           <main className="flex-grow w-full max-w-7xl mx-auto px-0 pt-0 pb-0">
             {renderPage()}
           </main>
+          {/* Footer component */}
           <Footer />
         </div>
       );
     };
 
-    const Navbar = ({ setCurrentPage, currentPage }) => {
+    // Navbar Component
+    const Navbar = ({ setCurrentPage, currentPage, user }) => {
       const navItems = [
         { name: 'Home', page: 'home' },
         { name: 'Our Services', page: 'services' },
@@ -140,55 +198,48 @@
         { name: 'FAQs', page: 'faqs' },
         { name: 'Contact Us', page: 'contact' },
       ];
-      return (
-	<nav className="bg-white shadow-sm z-50 py-2">
-	  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-y-2 sm:gap-y-0">
-		
-		{/* Logo + Name */}
-		<div className="flex items-center space-x-2 flex-shrink-0">
-		  <img
-			src="CompoundItLogo.png"
-			alt="CompoundIt Logo"
-			className="h-[35px] sm:h-[45px] md:h-[55px] max-h-[60px] w-auto object-contain cursor-pointer"
-			onClick={() => setCurrentPage('home')}
-			onError={(e) => {
-			  e.target.onerror = null;
-			  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIt';
-			}}
-		  />
-			<span className="text-xl sm:text-2xl font-bold text-compoundit-text whitespace-nowrap">
-			  Compound<span className="text-compoundit-accent">It</span>
-			</span>
-		</div>
-		{/* Nav buttons */}
-		<div className="flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-1 text-sm md:text-base text-center py-1">
-		  {[
-			{ name: 'Home', page: 'home' },
-			{ name: 'Our Services', page: 'services' },
-			{ name: 'About Us', page: 'about' },
-			{ name: 'Our Team', page: 'team' },
-			{ name: 'FAQs', page: 'faqs' },
-			{ name: 'Contact Us', page: 'contact' },
-		  ].map((item) => (
-			<button
-			  key={item.page}
-			  onClick={() => setCurrentPage(item.page)}
-			  className={`px-3 py-1 rounded-lg transition-colors duration-200 ${
-				currentPage === item.page
-				  ? 'bg-compoundit-accent text-white shadow-md'
-				  : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
-			  }`}
-			>
-			  {item.name}
-			</button>
-		  ))}
-		</div>
-	  </div>
-	</nav>
 
+      return (
+        <nav className="bg-white shadow-sm z-50 py-2">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-y-2 sm:gap-y-0">
+            {/* Logo + Name */}
+            <div className="flex items-center space-x-2 flex-shrink-0">
+              <img
+                src="CompoundItLogo.png"
+                alt="CompoundIt Logo"
+                className="h-[35px] sm:h-[45px] md:h-[55px] max-h-[60px] w-auto object-contain cursor-pointer"
+                onClick={() => setCurrentPage('home')}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://placehold.co/200x60/ffffff/86D9C5?text=CompoundIt';
+                }}
+              />
+              <span className="text-xl sm:text-2xl font-bold text-compoundit-text whitespace-nowrap">
+                Compound<span className="text-compoundit-accent">It</span>
+              </span>
+            </div>
+            {/* Nav buttons */}
+            <div className="flex flex-wrap justify-center sm:justify-end gap-x-4 gap-y-1 text-sm md:text-base text-center py-1">
+              {navItems.map((item) => (
+                <button
+                  key={item.page}
+                  onClick={() => setCurrentPage(item.page)}
+                  className={`px-3 py-1 rounded-lg transition-colors duration-200 ${
+                    currentPage === item.page
+                      ? 'bg-compoundit-accent text-white shadow-md'
+                      : 'text-compoundit-dark-gray hover:bg-compoundit-light-green hover:text-compoundit-text'
+                  }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </nav>
       );
     };
 
+    // Footer Component
     const Footer = () => (
       <footer className="bg-white py-6 mt-8 shadow-inner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-compoundit-dark-gray text-sm">
@@ -198,6 +249,7 @@
       </footer>
     );
 
+    // Home Page Component
     const HomePage = ({ setCurrentPage }) => {
       const services = [
         {
@@ -245,8 +297,8 @@
 
       return (
         <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg">
-          {/* Hero */}
-        <section className="hero-background -mt-4 rounded-xl shadow-md mb-6 sm:mb-10 md:mb-12 overflow-hidden h-[350px] sm:h-[475px] md:h-[550px]">
+          {/* Hero Section */}
+          <section className="hero-background -mt-4 rounded-xl shadow-md mb-6 sm:mb-10 md:mb-12 overflow-hidden h-[350px] sm:h-[475px] md:h-[550px]">
             <div className="hero-content px-4 py-2 sm:p-6 md:p-8 max-w-xl w-full">
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-white">
                 Medicine Made for You
@@ -265,7 +317,7 @@
             </div>
           </section>
 
-          {/* What is Compounding? */}
+          {/* What is Compounding? Section */}
           <section className="grid md:grid-cols-2 gap-8 items-center mb-12">
             <div className="bg-compoundit-light-green p-4 sm:p-6 rounded-lg shadow-md">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">What is Compounding?</h2>
@@ -284,7 +336,7 @@
             </div>
           </section>
 
-          {/* Core Services */}
+          {/* Core Services Section */}
           <section className="text-center bg-white p-4 sm:p-6 rounded-xl shadow-lg mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-8">Our Core Services</h2>
             <p className="text-base sm:text-lg text-compoundit-dark-gray max-w-3xl mx-auto mb-10">
@@ -304,21 +356,21 @@
             </button>
           </section>
 
-          {/* Ready to Order */}
+          {/* Ready to Order Section */}
           <section className="text-center bg-compoundit-light-green p-4 sm:p-6 rounded-xl shadow-lg mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Experience Personalised Care?</h2>
             <p className="text-base sm:text-lg text-compoundit-dark-gray max-w-4xl mx-auto mb-8">
               Ordering your custom compounded medication is simple and convenient. Start your journey to better health today.
             </p>
-			<button
-			  onClick={() => setCurrentPage('contact')}
-			  className="mt-6 px-8 py-3 bg-compoundit-accent text-white text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
-			>
-			  Order Your Medication Now
-			</button>
+            <button
+              onClick={() => setCurrentPage('contact')}
+              className="mt-6 px-8 py-3 bg-compoundit-accent text-white text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
+            >
+              Order Your Medication Now
+            </button>
           </section>
 
-          {/* Commitment */}
+          {/* Commitment Section */}
           <section className="text-center bg-white p-4 sm:p-6 rounded-xl shadow-lg">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Commitment to Your Health</h2>
             <p className="text-base sm:text-lg text-compoundit-dark-gray max-w-4xl mx-auto">
@@ -329,6 +381,7 @@
       );
     };
 
+    // About Us Page Component
     const AboutUsPage = () => (
       <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
         <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">About CompoundIt Pharmacy</h1>
@@ -364,81 +417,80 @@
       </div>
     );
 
-	// Our Team Page
-	const OurTeamPage = () => {
-	  const teamMembers = [
-	    {
-	      name: 'Tony Quach',
-	      title: 'Lead Compounding Pharmacist Manager',
-	      bio: 'Tony leads our pharmacy with a passion for patient care and innovative compounding solutions, ensuring the highest standards of quality and service.',
-	      image: 'tony.png',
-	    },
-	    {
-	      name: 'Andrew Mina',
-	      title: 'Director and Proprietor',
-	      bio: "Andrew's vision and leadership guide our commitment to providing accessible and personalised healthcare solutions for the community.",
-	      image: 'andrew.png',
-	    },
-	     {
-	      name: 'Abanoub Mina',
-	      title: 'Group Operations Manager',
-	      bio: 'Abanoub oversees our daily operations, ensuring a seamless and efficient experience for both our patients and our team.',
-	      image: 'aba.png'
-	    },
-	     {
-	      name: 'George Gilto',
-	      title: 'Senior Business Consultant',
-	      bio: "George's expertise helps us grow and innovate, allowing us to better serve our community with cutting-edge compounding services.",
-	      image: 'george.png',
-	    },
-		{
-	      name: 'Mariam Mina',
-	      title: 'Compounding Technician',
-	      bio: "Mariam plays a vital role in the preparation of customised medications, ensuring each compound is made with precision, care, and compliance.",
-	      image: 'mariam.png',
-	    },
-		{
-	      name: 'Carmine Vitiello',
-	      title: 'Senior Compounding Technician',
-	      bio: 'Carmine brings meticulous attention to detail and extensive experience to our lab, guaranteeing precision and safety in every formulation.',
-	      image: 'carmine.png',
-	    },
-		
-	  ];
-	
-	  return (
-	    <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-	      <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Meet Our Expert Team</h1>
-	      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-		{teamMembers.map((member, index) => (
-		  <div key={index} className="bg-compoundit-light-green p-6 rounded-lg shadow-md text-center flex flex-col items-center">
-		    {/* MOBILE CHANGE: Responsive image size */}
-		    <img
-		      src={member.image}
-		      alt={`Photo of ${member.name}`}
-		      className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mb-4 ring-4 ring-compoundit-accent ring-opacity-50"
-		      onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x150/9CA3AF/FFFFFF?text=PIC'; }}
-		    />
-		    <h2 className="text-xl sm:text-2xl font-semibold text-compoundit-text mb-2">{member.name}</h2>
-		    <p className="text-compoundit-accent font-medium mb-3">{member.title}</p>
-		    <p className="text-compoundit-dark-gray leading-relaxed text-sm">{member.bio}</p>
-		  </div>
-		))}
-	      </div>
-	    </div>
-	  );
-	};
+    // Our Team Page Component
+    const OurTeamPage = () => {
+      const teamMembers = [
+        {
+          name: 'Tony Quach',
+          title: 'Lead Compounding Pharmacist Manager',
+          bio: 'Tony leads our pharmacy with a passion for patient care and innovative compounding solutions, ensuring the highest standards of quality and service.',
+          image: 'tony.png',
+        },
+        {
+          name: 'Andrew Mina',
+          title: 'Director and Proprietor',
+          bio: "Andrew's vision and leadership guide our commitment to providing accessible and personalised healthcare solutions for the community.",
+          image: 'andrew.png',
+        },
+        {
+          name: 'Abanoub Mina',
+          title: 'Group Operations Manager',
+          bio: 'Abanoub oversees our daily operations, ensuring a seamless and efficient experience for both our patients and our team.',
+          image: 'aba.png'
+        },
+        {
+          name: 'George Gilto',
+          title: 'Senior Business Consultant',
+          bio: "George's expertise helps us grow and innovate, allowing us to better serve our community with cutting-edge compounding services.",
+          image: 'george.png',
+        },
+        {
+          name: 'Mariam Mina',
+          title: 'Compounding Technician',
+          bio: "Mariam plays a vital role in the preparation of customised medications, ensuring each compound is made with precision, care, and compliance.",
+          image: 'mariam.png',
+        },
+        {
+          name: 'Carmine Vitiello',
+          title: 'Senior Compounding Technician',
+          bio: 'Carmine brings meticulous attention to detail and extensive experience to our lab, guaranteeing precision and safety in every formulation.',
+          image: 'carmine.png',
+        },
+      ];
 
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Meet Our Expert Team</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {teamMembers.map((member, index) => (
+              <div key={index} className="bg-compoundit-light-green p-6 rounded-lg shadow-md text-center flex flex-col items-center">
+                <img
+                  src={member.image}
+                  alt={`Photo of ${member.name}`}
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mb-4 ring-4 ring-compoundit-accent ring-opacity-50"
+                  onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/150x150/9CA3AF/FFFFFF?text=PIC'; }}
+                />
+                <h2 className="text-xl sm:text-2xl font-semibold text-compoundit-text mb-2">{member.name}</h2>
+                <p className="text-compoundit-accent font-medium mb-3">{member.title}</p>
+                <p className="text-compoundit-dark-gray leading-relaxed text-sm">{member.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    // Our Services Page Component
     const OurServicesPage = () => {
       const areas = [
-	  		{ name:"Women's Health", image:'women.png' },
-	  		{ name:"Men's Health", image:'men.png' },
-			{ name:"Pain Management", image:'pain.png' },
-			{ name:"Dermatology", image:'skin.png' },
-			{ name:"Paediatric Compounding", image:'kids.png' },
-			{ name:"Hormone Replacement Therapy", image:'hormone.png' },
-			{ name:"Veterinary Medicine", image:'vet.png' },
-			{ name:"Custom Medications", image:'custom.png' },
+        { name:"Women's Health", image:'women.png' },
+        { name:"Men's Health", image:'men.png' },
+        { name:"Pain Management", image:'pain.png' },
+        { name:"Dermatology", image:'skin.png' },
+        { name:"Paediatric Compounding", image:'kids.png' },
+        { name:"Hormone Replacement Therapy", image:'hormone.png' },
+        { name:"Veterinary Medicine", image:'vet.png' },
+        { name:"Custom Medications", image:'custom.png' },
       ];
       return (
         <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
@@ -486,56 +538,72 @@
       );
     };
 
-		const FAQsPage = () => {
-		  const faqs = [
-			{ q:'What is a compounding pharmacy?', a:'A compounding pharmacy is where pharmacists create custom medications from scratch to meet unique patient needs.' },
-			{ q:'Is compounded medication safe?', a:'Yes, when prepared by licensed pharmacists following strict standards using pharmaceutical-grade ingredients.' },
-			{ q:'Do I need a prescription?', a:'Yes, a valid prescription from a licensed practitioner is required for compounded meds.' },
-			{ q:'How do I order?', a:'Bring or send your prescription to us; we’ll prepare and notify you when ready.' },
-			{ q:'Do you ship?', a:'Yes — Australia-wide shipping with tracking available (2–5 business days).' },
-			{ q:'What payment methods?', a:'We accept Visa, MasterCard, EFTPOS, and bank transfer.' }
-		  ];
-		  const [openIndex, setOpenIndex] = React.useState(null);
+    // FAQs Page Component
+    const FAQsPage = () => {
+      const faqs = [
+        { q:'What is a compounding pharmacy?', a:'A compounding pharmacy is where pharmacists create custom medications from scratch to meet unique patient needs.' },
+        { q:'Is compounded medication safe?', a:'Yes, when prepared by licensed pharmacists following strict standards using pharmaceutical-grade ingredients.' },
+        { q:'Do I need a prescription?', a:'Yes, a valid prescription from a licensed practitioner is required for compounded meds.' },
+        { q:'How do I order?', a:'Bring or send your prescription to us; we’ll prepare and notify you when ready.' },
+        { q:'Do you ship?', a:'Yes — Australia-wide shipping with tracking available (2–5 business days).' },
+        { q:'What payment methods?', a:'We accept Visa, MasterCard, EFTPOS, and bank transfer.' }
+      ];
+      const [openIndex, setOpenIndex] = React.useState(null);
 
-		  return (
-			<div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
-			  <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
-			  <div className="space-y-4">
-				{faqs.map((faq, index) => (
-				  <div
-					key={index}
-					className="bg-compoundit-light-green border border-compoundit-light-green rounded-lg overflow-hidden"
-				  >
-					<button
-					  className="w-full text-left p-4 flex justify-between items-center hover:bg-white transition-colors"
-					  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-					>
-					  <span className="text-lg sm:text-xl font-semibold text-compoundit-text">{faq.q}</span>
-					  <svg
-						className={`w-6 h-6 transform transition-transform duration-200 ${openIndex === index ? 'rotate-180' : ''}`}
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					  >
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-					  </svg>
-					</button>
-					{openIndex === index && (
-					  <div className="p-4 bg-white text-compoundit-dark-gray leading-relaxed">
-						{faq.a}
-					  </div>
-					)}
-				  </div>
-				))}
-			  </div>
-			</div>
-		  );
-		};
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Frequently Asked Questions</h1>
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-compoundit-light-green border border-compoundit-light-green rounded-lg overflow-hidden"
+              >
+                <button
+                  className="w-full text-left p-4 flex justify-between items-center hover:bg-white transition-colors"
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                >
+                  <span className="text-lg sm:text-xl font-semibold text-compoundit-text">{faq.q}</span>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform duration-200 ${openIndex === index ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {openIndex === index && (
+                  <div className="p-4 bg-white text-compoundit-dark-gray leading-relaxed">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
 
-
-
+    // Contact Us Page Component
     const ContactUsPage = () => {
       const [isSubmitted, setIsSubmitted] = React.useState(false);
+      const [showModal, setShowModal] = React.useState(false); // State for custom modal
+      const [modalMessage, setModalMessage] = React.useState(''); // State for modal message
+
+      // Function to show custom alert modal
+      const showCustomAlert = (message) => {
+        setModalMessage(message);
+        setShowModal(true);
+      };
+
+      // Function to close custom alert modal
+      const closeCustomAlert = () => {
+        setShowModal(false);
+        setModalMessage('');
+      };
+
+
       return (
         <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Get in Touch</h1>
@@ -569,47 +637,598 @@
                   <p className="text-compoundit-dark-gray">Your message has been sent. We’ll get back to you shortly.</p>
                 </div>
               ) : (
-                <form
-                  onSubmit={async e => {
-                    e.preventDefault();
-                    const formData = new FormData(e.target);
-                    try {
-                      const res = await fetch("https://formsubmit.co/ajax/info@compoundit.com.au", {
-                        method:"POST", headers:{Accept:"application/json"}, body:formData
-                      });
-                      if(res.ok){ setIsSubmitted(true); e.target.reset(); }
-                      else throw new Error();
-                    } catch {
-                      alert("Error. Please try again.");
-                    }
-                  }}
-                  className="space-y-4"
-                >
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-1">Your Name</label>
-                    <input type="text" id="name" name="name" required className="w-full p-2 border rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent"/>
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-1">Your Email</label>
-                    <input type="email" id="email" name="email" required className="w-full p-2 border rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent"/>
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium mb-1">Your Message</label>
-                    <textarea id="message" name="message" rows="4" required className="w-full p-2 border rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent"/>
-                  </div>
-                  <input type="hidden" name="_captcha" value="false"/>
-                  <input type="hidden" name="_subject" value="New Enquiry from CompoundIt Website!"/>
-                  <button type="submit" className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md hover:bg-opacity-90 transition">
-                    Send Message
-                  </button>
-                </form>
+				<form
+				  action="https://formsubmit.co/info@compoundit.com.au"
+				  method="POST"
+				  encType="multipart/form-data"
+				  className="space-y-6"
+				>
+				  <input type="hidden" name="_subject" value="New Prescription Script Submission" />
+				  <input type="hidden" name="_captcha" value="false" />
+				  <input type="hidden" name="_template" value="box" />
+
+				  <div>
+					<label htmlFor="patientName" className="block text-sm font-medium text-compoundit-text mb-1">Patient Full Name</label>
+					<input
+					  type="text"
+					  id="patientName"
+					  name="patientName"
+					  required
+					  className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					/>
+				  </div>
+
+				  <div>
+					<label htmlFor="dob" className="block text-sm font-medium text-compoundit-text mb-1">Date of Birth</label>
+					<input
+					  type="date"
+					  id="dob"
+					  name="dob"
+					  required
+					  className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					/>
+				  </div>
+
+				  <div>
+					<label htmlFor="contactNumber" className="block text-sm font-medium text-compoundit-text mb-1">Contact Number</label>
+					<input
+					  type="tel"
+					  id="contactNumber"
+					  name="contactNumber"
+					  required
+					  className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					/>
+				  </div>
+
+				  <div>
+					<label htmlFor="scriptFile" className="block text-sm font-medium text-compoundit-text mb-1">Upload Script (PDF or Image)</label>
+					<input
+					  type="file"
+					  id="scriptFile"
+					  name="attachment"
+					  accept=".pdf, .jpg, .jpeg, .png"
+					  required
+					  className="w-full text-compoundit-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-compoundit-light-green file:text-compoundit-text hover:file:bg-compoundit-accent hover:file:text-white cursor-pointer"
+					/>
+				  </div>
+
+				  <div>
+					<label htmlFor="notes" className="block text-sm font-medium text-compoundit-text mb-1">Notes (Optional)</label>
+					<textarea
+					  id="notes"
+					  name="notes"
+					  rows="3"
+					  className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					/>
+				  </div>
+
+				  <button
+					type="submit"
+					className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md hover:bg-opacity-90 transition shadow-lg"
+				  >
+					Submit Script
+				  </button>
+				</form>
+
               )}
             </div>
+          </div>
+          {/* Custom Alert Modal */}
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h3 className="text-xl font-bold mb-4">Error</h3>
+                <p className="text-compoundit-dark-gray mb-6">{modalMessage}</p>
+                <button
+                  onClick={closeCustomAlert}
+                  className="px-6 py-2 bg-compoundit-accent text-white rounded-md hover:bg-opacity-90 transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Practitioner Login Page Component
+    const PractitionerLoginPage = ({ auth, setCurrentPage }) => {
+      const [email, setEmail] = React.useState('');
+      const [password, setPassword] = React.useState('');
+      const [message, setMessage] = React.useState('');
+      const [showModal, setShowModal] = React.useState(false); // State for custom modal
+      const [modalMessage, setModalMessage] = React.useState(''); // State for modal message
+
+      // Function to show custom alert modal
+      const showCustomAlert = (message) => {
+        setModalMessage(message);
+        setShowModal(true);
+      };
+
+      // Function to close custom alert modal
+      const closeCustomAlert = () => {
+        setShowModal(false);
+        setModalMessage('');
+      };
+
+
+      // Handle practitioner login
+      const handleLogin = async (e) => {
+        e.preventDefault();
+        setMessage(''); // Clear previous messages
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+          // The onAuthStateChanged listener in App will handle navigation to dashboard
+        } catch (error) {
+          console.error("Login Error:", error.code, error.message);
+          let errorMessage = "An unknown error occurred. Please try again.";
+          switch (error.code) {
+            case 'auth/user-not-found':
+              errorMessage = 'No user found with this email.';
+              break;
+            case 'auth/wrong-password':
+              errorMessage = 'Incorrect password.';
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'Invalid email format.';
+              break;
+            case 'auth/too-many-requests':
+              errorMessage = 'Too many failed login attempts. Please try again later.';
+              break;
+            default:
+              errorMessage = 'Login failed. Please check your credentials.';
+              break;
+          }
+          showCustomAlert(errorMessage);
+        }
+      };
+
+      return (
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md mx-auto mt-12">
+          <h1 className="text-3xl font-bold text-compoundit-text mb-6 text-center">Practitioner Login</h1>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-compoundit-accent text-white py-2 rounded-md hover:shadow-lg transition font-semibold"
+            >
+              Login
+            </button>
+            {message && <p className="text-center text-red-500 mt-2">{message}</p>}
+          </form>
+          <p className="text-center text-sm text-compoundit-dark-gray mt-4">
+            Don't have an account?{' '}
+            <button
+              onClick={() => setCurrentPage('register')}
+              className="text-compoundit-accent hover:underline font-semibold"
+            >
+              Register Here
+            </button>
+          </p>
+
+          {/* Custom Alert Modal */}
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h3 className="text-xl font-bold mb-4">Login Error</h3>
+                <p className="text-compoundit-dark-gray mb-6">{modalMessage}</p>
+                <button
+                  onClick={closeCustomAlert}
+                  className="px-6 py-2 bg-compoundit-accent text-white rounded-md hover:bg-opacity-90 transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Practitioner Registration Page Component
+    const PractitionerRegistrationPage = ({ auth, setCurrentPage }) => {
+      const [firstName, setFirstName] = React.useState('');
+      const [lastName, setLastName] = React.useState('');
+      const [email, setEmail] = React.useState('');
+      const [password, setPassword] = React.useState('');
+      const [confirmPassword, setConfirmPassword] = React.useState('');
+      const [showModal, setShowModal] = React.useState(false);
+      const [modalMessage, setModalMessage] = React.useState('');
+      const [isSuccess, setIsSuccess] = React.useState(false);
+
+      const showCustomAlert = (message, success = false) => {
+        setModalMessage(message);
+        setIsSuccess(success);
+        setShowModal(true);
+      };
+
+      const closeCustomAlert = () => {
+        setShowModal(false);
+        setModalMessage('');
+        if (isSuccess) {
+          setCurrentPage('practitioners'); // Redirect to login page after successful registration
+        }
+      };
+
+      const handleRegister = async (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+          showCustomAlert("Passwords do not match.");
+          return;
+        }
+
+        try {
+          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+          await userCredential.user.updateProfile({
+            displayName: `${firstName} ${lastName}`
+          });
+          showCustomAlert("Registration successful! You can now log in.", true);
+        } catch (error) {
+          console.error("Registration Error:", error.code, error.message);
+          let errorMessage = "Registration failed. Please try again.";
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage = 'The email address is already in use by another account.';
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'The email address is not valid.';
+              break;
+            case 'auth/weak-password':
+              errorMessage = 'The password is too weak. Please choose a stronger password.';
+              break;
+            default:
+              errorMessage = 'Registration failed. Please check your details.';
+              break;
+          }
+          showCustomAlert(errorMessage);
+        }
+      };
+
+      return (
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md mx-auto mt-12">
+          <h1 className="text-3xl font-bold text-compoundit-text mb-6 text-center">Practitioner Registration</h1>
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium mb-1">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                placeholder="First Name"
+                className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium mb-1">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                placeholder="Last Name"
+                className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                className="w-full px-4 py-2 rounded-md border border-compoundit-light-green focus:ring-compoundit-accent focus:border-compoundit-accent"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-compoundit-accent text-white py-2 rounded-md hover:shadow-lg transition font-semibold"
+            >
+              Register
+            </button>
+          </form>
+          <p className="text-center text-sm text-compoundit-dark-gray mt-4">
+            Already have an account?{' '}
+            <button
+              onClick={() => setCurrentPage('practitioners')}
+              className="text-compoundit-accent hover:underline font-semibold"
+            >
+              Login Here
+            </button>
+          </p>
+
+          {/* Custom Alert Modal */}
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h3 className={`text-xl font-bold mb-4 ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>
+                  {isSuccess ? 'Success!' : 'Error'}
+                </h3>
+                <p className="text-compoundit-dark-gray mb-6">{modalMessage}</p>
+                <button
+                  onClick={closeCustomAlert}
+                  className="px-6 py-2 bg-compoundit-accent text-white rounded-md hover:bg-opacity-90 transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Practitioner Dashboard Component
+    const PractitionerDashboard = ({ auth, setCurrentPage }) => {
+      const user = auth.currentUser; // Get current logged-in user
+      const [selectedCondition, setSelectedCondition] = React.useState(null);
+
+      // Sample data for conditions and medications
+      const conditionsData = [
+        { id: 'womens-health', name: "Women's Health" },
+        { id: 'mens-health', name: "Men's Health" },
+        { id: 'pain-management', name: "Pain Management" },
+        { id: 'dermatology', name: "Dermatology" },
+        { id: 'paediatric-compounding', name: "Paediatric Compounding" },
+        { id: 'hormone-replacement-therapy', name: "Hormone Replacement Therapy" },
+        { id: 'veterinary-medicine', name: "Veterinary Medicine" },
+      ];
+
+      const medicationsData = {
+        'womens-health': [
+          { name: 'Bio-identical Hormones', description: 'Customised dosages for hormone balance (e.g., Estriol, Progesterone, Testosterone).' },
+          { name: 'Vaginal Creams', description: 'Estrogen or DHEA creams for local therapy.' },
+          { name: 'Thyroid Preparations', description: 'Individualised thyroid hormone dosages (e.g., T3, T4).' },
+          { name: 'PCOS Management', description: 'Formulations addressing symptoms of Polycystic Ovary Syndrome.' },
+          { name: 'Endometriosis Support', description: 'Custom compounds for pain and inflammation related to endometriosis.' },
+          { name: 'Infertility Support', description: 'Supportive therapies for fertility challenges.' },
+        ],
+        'mens-health': [
+          { name: 'Testosterone Creams/Gels', description: 'Custom formulations for Testosterone Replacement Therapy (TRT).' },
+          { name: 'Erectile Dysfunction Compounds', description: 'Tailored solutions for ED, including various combinations.' },
+          { name: 'Hair Loss Formulations', description: 'Topical solutions for hair regrowth (e.g., Minoxidil combinations).' },
+          { name: 'Prostate Health Compounds', description: 'Formulations for benign prostatic hyperplasia (BPH) or other prostate concerns.' },
+          { name: 'Andropause Management', description: 'Comprehensive hormone balancing for men.' },
+        ],
+        'pain-management': [
+          { name: 'Topical Pain Creams', description: 'Non-narcotic pain relief, localised (e.g., Ketoprofen, Gabapentin, Lidocaine).' },
+          { name: 'Neuropathic Pain Formulas', description: 'Compounded medications for nerve pain.' },
+          { name: 'Inflammation Management', description: 'Anti-inflammatory compounds for chronic pain conditions.' },
+          { name: 'Muscle Relaxants', description: 'Custom doses of muscle relaxants in various forms.' },
+          { name: 'Migraine Solutions', description: 'Compounded nasal sprays or oral solutions for migraine relief.' },
+        ],
+        'dermatology': [
+          { name: 'Acne Treatments', description: 'Custom topical and oral formulations (e.g., Tretinoin, Clindamycin, Niacinamide).' },
+          { name: 'Anti-aging Creams', description: 'Personalised formulations for skin rejuvenation and wrinkle reduction.' },
+          { name: 'Psoriasis/Eczema Compounds', description: 'Steroid-free or custom strength creams for chronic skin conditions.' },
+          { name: 'Scar Treatment', description: 'Silicone bases with active ingredients for scar reduction.' },
+          { name: 'Rosacea Formulations', description: 'Targeted treatments for redness and inflammation.' },
+          { name: 'Fungal Infection Creams', description: 'Compounded antifungals for resistant infections.' },
+        ],
+        'paediatric-compounding': [
+          { name: 'Flavoured Suspensions', description: 'Medications in child-friendly flavours and doses (e.g., grape, cherry, bubblegum).' },
+          { name: 'Sugar-Free Formulations', description: 'Custom liquid medications without sugar, dyes, or preservatives.' },
+          { name: 'Suppositories for Kids', description: 'Alternative dosage forms for children who cannot swallow pills.' },
+          { name: 'Topical Rashes/Diaper Creams', description: 'Gentle, effective compounds for sensitive skin.' },
+          { name: 'ADHD Medications', description: 'Liquid or custom-dose capsule forms for improved adherence.' },
+        ],
+        'hormone-replacement-therapy': [
+          { name: 'Bio-identical Hormones', description: 'Estrogen, Progesterone, Testosterone, DHEA in custom forms (creams, capsules, suppositories).' },
+          { name: 'Adrenal Support Compounds', description: 'Formulations for adrenal fatigue and stress response.' },
+          { name: 'Thyroid Hormones', description: 'Custom combinations of T3 and T4 for optimal thyroid function.' },
+          { name: 'Growth Hormone Support', description: 'Peptide or other supportive therapies.' },
+        ],
+        'veterinary-medicine': [
+          { name: 'Pet-Friendly Flavoured Meds', description: 'Medications in palatable forms for animals (e.g., beef, chicken, fish flavours).' },
+          { name: 'Specific Animal Dosages', description: 'Precise dosages for various animal sizes and species (dogs, cats, horses, exotics).' },
+          { name: 'Topical Veterinary Creams', description: 'Compounded creams for animal skin conditions, wounds, or ear infections.' },
+          { name: 'Transdermal Gels', description: 'For easy administration without oral struggle.' },
+          { name: 'Discontinued Pet Medications', description: 'Recreating unavailable vital medications for pets.' },
+        ],
+      };
+
+      // Handle logout
+      const handleLogout = async () => {
+        try {
+          await auth.signOut();
+          setCurrentPage('home'); // Redirect to home after logout
+        } catch (error) {
+          console.error("Error logging out:", error.message);
+        }
+      };
+
+      return (
+        <div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-6 text-center">Practitioner Dashboard</h1>
+          {user && (
+            // Display user's display name (first and last name) or email if display name is not set
+            <p className="text-center text-compoundit-dark-gray mb-6">Welcome, <span className="font-semibold">{user.displayName || user.email}</span>!</p>
+          )}
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4 text-center">Select a Condition to View Recommended Medications</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {conditionsData.map((condition) => (
+                <button
+                  key={condition.id}
+                  onClick={() => setSelectedCondition(condition.id)}
+                  className={`p-4 rounded-lg shadow-md transition-all duration-200 ${
+                    selectedCondition === condition.id
+                      ? 'bg-compoundit-accent text-white transform scale-105'
+                      : 'bg-compoundit-light-green text-compoundit-text hover:bg-compoundit-lightest-green'
+                  } text-center font-medium`}
+                >
+                  {condition.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {selectedCondition && (
+            <div className="bg-compoundit-light-green p-6 rounded-xl shadow-lg">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+                Medications for {conditionsData.find(c => c.id === selectedCondition)?.name}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {medicationsData[selectedCondition] && medicationsData[selectedCondition].length > 0 ? (
+                  medicationsData[selectedCondition].map((med, index) => (
+                    <div key={index} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                      <h3 className="text-xl font-semibold mb-2 text-compoundit-text">{med.name}</h3>
+                      <p className="text-sm text-compoundit-dark-gray">{med.description}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-compoundit-dark-gray text-center col-span-full">No specific medications listed for this condition yet. Please contact us for more information.</p>
+                )}
+              </div>
+            </div>
+          )}
+          <div className="text-center mt-8">
+            <button
+              onClick={handleLogout}
+              className="px-6 py-3 bg-red-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300"
+            >
+              Logout
+            </button>
           </div>
         </div>
       );
     };
 
+    // New Upload Script Page Component
+		const UploadScriptPage = () => {
+		  return (
+			<div className="bg-white p-4 md:p-8 rounded-xl shadow-lg mt-4 max-w-2xl mx-auto">
+			  <h1 className="text-3xl md:text-4xl font-bold text-compoundit-text mb-8 text-center">Upload Your Prescription Script</h1>
+			  <p className="text-center text-compoundit-dark-gray mb-6">
+				Please fill in your details and upload your prescription script. It will be sent securely to our team.
+			  </p>
+
+			  <form
+				action="https://formsubmit.co/info@compoundit.com.au"
+				method="POST"
+				encType="multipart/form-data"
+				className="space-y-6"
+			  >
+				<input type="hidden" name="_subject" value="New Prescription Script Submission" />
+				<input type="hidden" name="_captcha" value="false" />
+				<input type="hidden" name="_template" value="box" />
+
+				<div>
+				  <label htmlFor="patientName" className="block text-sm font-medium text-compoundit-text mb-1">Patient Full Name</label>
+				  <input
+					type="text"
+					id="patientName"
+					name="patientName"
+					required
+					className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					placeholder="e.g., Jane Doe"
+				  />
+				</div>
+
+				<div>
+				  <label htmlFor="dob" className="block text-sm font-medium text-compoundit-text mb-1">Date of Birth</label>
+				  <input
+					type="date"
+					id="dob"
+					name="dob"
+					required
+					className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+				  />
+				</div>
+
+				<div>
+				  <label htmlFor="contactNumber" className="block text-sm font-medium text-compoundit-text mb-1">Contact Number</label>
+				  <input
+					type="tel"
+					id="contactNumber"
+					name="contactNumber"
+					required
+					className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					placeholder="e.g., 0412 345 678"
+				  />
+				</div>
+
+				<div>
+				  <label htmlFor="scriptFile" className="block text-sm font-medium text-compoundit-text mb-1">Upload Script (PDF or Image)</label>
+				  <input
+					type="file"
+					id="scriptFile"
+					name="attachment"
+					accept=".pdf,.jpg,.jpeg,.png"
+					required
+					className="w-full text-compoundit-text file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-compoundit-light-green file:text-compoundit-text hover:file:bg-compoundit-accent hover:file:text-white cursor-pointer"
+				  />
+				</div>
+
+				<div>
+				  <label htmlFor="notes" className="block text-sm font-medium text-compoundit-text mb-1">Notes (Optional)</label>
+				  <textarea
+					id="notes"
+					name="notes"
+					rows="3"
+					className="w-full p-3 border border-compoundit-light-green rounded-md focus:ring-compoundit-accent focus:border-compoundit-accent transition"
+					placeholder="Add any relevant notes or special instructions here..."
+				  />
+				</div>
+
+				<button
+				  type="submit"
+				  className="w-full p-3 bg-compoundit-accent text-white font-semibold rounded-md hover:bg-opacity-90 transition shadow-lg"
+				>
+				  Submit Script
+				</button>
+			  </form>
+			</div>
+		  );
+		};
+
+
+    // Render the main App component
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
